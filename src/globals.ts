@@ -1,0 +1,1 @@
+export const PRIVY_APP_ID = import.meta.env.PUBLIC_PRIVY_APP_ID;
