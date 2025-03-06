@@ -1,23 +1,29 @@
-import { createRootRoute, createRoute, createRouter, lazyRouteComponent, redirect } from "@tanstack/react-router";
-import Root from "./routes/root";
-import Index from "./routes";
-import Wallet from "./routes/wallet";
-import { loadRemoteModule } from "./lib/api/mf";
+import {
+  createRootRoute,
+  createRoute,
+  createRouter,
+  lazyRouteComponent,
+  redirect,
+} from '@tanstack/react-router';
+import { loadRemoteModule } from './lib/api/mf';
+import Index from './routes';
+import Root from './routes/root';
+import Wallet from './routes/wallet';
 
 const rootRoute = createRootRoute({
   component: Root,
-})
+});
 
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
   component: Index,
-})
+});
 const walletRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/wallet',
   component: Wallet,
-})
+});
 
 const indexStakingRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -25,21 +31,20 @@ const indexStakingRoute = createRoute({
   beforeLoad: async () => {
     throw redirect({
       to: '/staking/conservative',
-    })
-  }
-})
+    });
+  },
+});
 
 const conservativeStakingRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/staking/conservative',
   component: lazyRouteComponent(() => import('./routes/staking/conservative')),
-})
+});
 const dynamicStakingRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/staking/dynamic',
   component: lazyRouteComponent(() => import('./routes/staking/dynamic')),
-})
-
+});
 
 const indexRouletteRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -59,19 +64,23 @@ const singleRouletteRoute = createRoute({
   getParentRoute: () => rouletteLayoutRoute,
   path: '/games/roulette/single',
   component: lazyRouteComponent(() => import('./routes/games/roulette/single')),
-})
+});
 
 const liveIndexRouletteRoute = createRoute({
   getParentRoute: () => rouletteLayoutRoute,
   path: '/games/roulette/live',
-  component: lazyRouteComponent(() => import('./routes/games/roulette/live/index')),
-})
+  component: lazyRouteComponent(
+    () => import('./routes/games/roulette/live/index'),
+  ),
+});
 
 const liveTableRouletteRoute = createRoute({
   getParentRoute: () => rouletteLayoutRoute,
   path: '/games/roulette/live/$table',
-  component: lazyRouteComponent(() => import('./routes/games/roulette/live/table')),
-})
+  component: lazyRouteComponent(
+    () => import('./routes/games/roulette/live/table'),
+  ),
+});
 
 const indexPredictRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -86,7 +95,6 @@ const predictRoute = createRoute({
   path: '/games/predict/$pair',
   component: lazyRouteComponent(() => import('./routes/games/predict/pair')),
 });
-
 
 const luroIndexRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -129,13 +137,17 @@ const binaryTreeRoute = createRoute({
 const lotteryRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/games/lottery/lotto',
-  component: lazyRouteComponent(() => import('./routes/games/lottery/lotto/index')),
+  component: lazyRouteComponent(
+    () => import('./routes/games/lottery/lotto/index'),
+  ),
 });
 
 const lotteryRoundRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/games/lottery/lotto/$round',
-  component: lazyRouteComponent(() => import('./routes/games/lottery/lotto/round')),
+  component: lazyRouteComponent(
+    () => import('./routes/games/lottery/lotto/round'),
+  ),
 });
 
 const lotteryIntervalRoute = createRoute({
@@ -167,27 +179,37 @@ const advancedAcademyRoute = createRoute({
 const lessonAcademyRoute = createRoute({
   getParentRoute: () => layoutAcademyRoute,
   path: '/academy/lesson/$section/$lesson',
-  component: lazyRouteComponent(() => import('./routes/academy/lesson.section.lesson')),
+  component: lazyRouteComponent(
+    () => import('./routes/academy/lesson.section.lesson'),
+  ),
 });
 
 const indexAcademyRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/academy',
   beforeLoad: async () => {
-    throw redirect({ to: '/academy/lesson/$section/$lesson', params: { section: '1', lesson: '1' } });
+    throw redirect({
+      to: '/academy/lesson/$section/$lesson',
+      params: { section: '1', lesson: '1' },
+    });
   },
 });
 const sectionAcademyRoute = createRoute({
   getParentRoute: () => layoutAcademyRoute,
   path: '/academy/lesson/$section',
-  component: lazyRouteComponent(() => import('./routes/academy/lesson.section')),
+  component: lazyRouteComponent(
+    () => import('./routes/academy/lesson.section'),
+  ),
 });
 const newAcademyRoute = createRoute({
   getParentRoute: () => layoutAcademyRoute,
   path: '/academy/new',
   // validateSearch: (await loadRemoteModule<{ falidateRef: () => void }>('betfinio_context', 'lib/utils')).falidateRef, todo
   beforeLoad: async () => {
-    throw redirect({ to: '/academy/lesson/$section/$lesson', params: { section: '1', lesson: '1' } });
+    throw redirect({
+      to: '/academy/lesson/$section/$lesson',
+      params: { section: '1', lesson: '1' },
+    });
   },
 });
 const eventsAcademyRoute = createRoute({
@@ -210,8 +232,46 @@ const createAcademyRoute = createRoute({
   component: lazyRouteComponent(() => import('./routes/academy/lesson.create')),
 });
 
+const homeRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/home',
+  component: lazyRouteComponent(() => import('./routes/home')),
+});
 
-rootRoute.addChildren([indexRoute, walletRoute, indexStakingRoute, conservativeStakingRoute, dynamicStakingRoute, stonesRoute, indexRouletteRoute, rouletteLayoutRoute, liveTableRouletteRoute, singleRouletteRoute, liveIndexRouletteRoute, indexPredictRoute, predictRoute, luroIndexRoute, luroIntervalRoute, affiliateRoute, linearTreeRoute, binaryTreeRoute, lotteryRoute, lotteryIntervalRoute, lotteryRoundRoute, statisticsRoute, layoutAcademyRoute, advancedAcademyRoute, lessonAcademyRoute, indexAcademyRoute, sectionAcademyRoute, newAcademyRoute, eventsAcademyRoute, documentsAcademyRoute, createAcademyRoute]);
+rootRoute.addChildren([
+  indexRoute,
+  walletRoute,
+  indexStakingRoute,
+  conservativeStakingRoute,
+  dynamicStakingRoute,
+  stonesRoute,
+  indexRouletteRoute,
+  rouletteLayoutRoute,
+  liveTableRouletteRoute,
+  singleRouletteRoute,
+  liveIndexRouletteRoute,
+  indexPredictRoute,
+  predictRoute,
+  luroIndexRoute,
+  luroIntervalRoute,
+  affiliateRoute,
+  linearTreeRoute,
+  binaryTreeRoute,
+  lotteryRoute,
+  lotteryIntervalRoute,
+  lotteryRoundRoute,
+  statisticsRoute,
+  layoutAcademyRoute,
+  advancedAcademyRoute,
+  lessonAcademyRoute,
+  indexAcademyRoute,
+  sectionAcademyRoute,
+  newAcademyRoute,
+  eventsAcademyRoute,
+  documentsAcademyRoute,
+  createAcademyRoute,
+  homeRoute,
+]);
 const router = createRouter({
   routeTree: rootRoute,
 });

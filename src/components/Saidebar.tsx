@@ -1,7 +1,7 @@
+import { cn } from '@betfinio/components';
 import { Link } from '@tanstack/react-router';
 import { mfQueryClient } from '../config/query';
 import { useContextManifest } from '../lib/query/mf';
-import { cn } from '@betfinio/components';
 
 const linkMapping: Record<string, string> = {
   staking: '/staking',
@@ -34,7 +34,11 @@ const Sidebar = () => {
   return (
     <div className={cn('w-[250px] p-4 flex flex-col gap-2 bg-sidebar')}>
       {Object.keys(manifest.sidebar).map((section) => (
-        <Link to={linkMapping[section]} key={section}>
+        <Link
+          to={linkMapping[section]}
+          key={section}
+          className="border border-border p-2 w-full rounded-lg bg-secondary"
+        >
           {section}
         </Link>
       ))}

@@ -1,6 +1,7 @@
 import { mfQueryClient } from '@/src/config/query';
 import { useLoadRemoteModule } from '@/src/lib/query/mf';
 import { ContextConfigModule, RemoteModule } from '@/src/types';
+import { ZeroAddress, truncateEthAddress } from '@betfinio/abi';
 import {
   Badge,
   DropdownMenu,
@@ -9,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@betfinio/components/ui';
-import { usePrivy, type ConnectedWallet } from '@privy-io/react-auth';
+import { type ConnectedWallet, usePrivy } from '@privy-io/react-auth';
 import { useSetActiveWallet } from '@privy-io/wagmi';
 import {
   DownloadIcon,
@@ -17,6 +18,7 @@ import {
   PlugZapIcon,
   TrashIcon,
 } from 'lucide-react';
+import type { Address } from 'viem';
 import { useAccount } from 'wagmi';
 
 function SingleWallet({ wallet }: { wallet: ConnectedWallet }) {
@@ -34,7 +36,7 @@ function SingleWallet({ wallet }: { wallet: ConnectedWallet }) {
   return (
     <div className="p-4 w-full border border-border rounded-lg flex items-center justify-between bg-secondary">
       <div className="flex items-center gap-2">
-        {wallet.address}
+        {truncateEthAddress(wallet.address as Address)}
         {wallet.imported && <Badge>Imported</Badge>}
         {address === wallet.address && (
           <Badge className="bg-success text-success-foreground">
