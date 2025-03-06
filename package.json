@@ -8,7 +8,9 @@
     "check": "biome check --write",
     "dev": "rsbuild dev --open",
     "format": "biome format --write",
-    "preview": "rsbuild preview"
+    "preview": "rsbuild preview",
+    "secret:dev": "bun run secret.ts -- development dev",
+    "secret:prod": "bun run secret.ts -- production prod/io"
   },
   "dependencies": {
     "@betfinio/abi": "^2.4.0",
@@ -43,6 +45,7 @@
     "@commitlint/cli": "^19.7.1",
     "@commitlint/config-conventional": "^19.7.1",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "@aws-sdk/client-secrets-manager": "^3.758.0"
   }
 }
