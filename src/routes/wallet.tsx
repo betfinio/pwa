@@ -18,7 +18,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 function WalletPage() {
   const { wallets } = useWallets();
-  const { ready, connectOrCreateWallet } = usePrivy();
+  const { ready, connectOrCreateWallet, logout } = usePrivy();
 
   if (!ready) {
     return (
@@ -41,7 +41,12 @@ function WalletPage() {
     );
   }
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 p-4">
+      <div className="flex flex-row gap-2 items-center">
+        <Button variant="outline" onClick={() => logout()}>
+          Logout
+        </Button>
+      </div>
       My wallets
       <div className="flex flex-col gap-2">
         {wallets.map((wallet) => (

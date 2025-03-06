@@ -12,5 +12,7 @@ dist/
 !.vscode/extensions.json
 .idea
 
-
 .npmrc
+
+# Public
+providers-local.json

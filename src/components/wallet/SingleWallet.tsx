@@ -1,3 +1,6 @@
+import { mfQueryClient } from '@/src/config/query';
+import { useLoadRemoteModule } from '@/src/lib/query/mf';
+import { ContextConfigModule, RemoteModule } from '@/src/types';
 import {
   Badge,
   DropdownMenu,
@@ -14,29 +17,30 @@ import {
   PlugZapIcon,
   TrashIcon,
 } from 'lucide-react';
+import { useAccount } from 'wagmi';
 
 function SingleWallet({ wallet }: { wallet: ConnectedWallet }) {
   const { exportWallet } = usePrivy();
   const { setActiveWallet } = useSetActiveWallet();
+  const { address } = useAccount();
 
   const handleExportWallet = async () => {
-    const exportedWallet = await exportWallet({ address: wallet.address });
-    console.log(exportedWallet);
+    await exportWallet({ address: wallet.address });
   };
   const handleConnectWallet = async () => {
-    console.log('connect wallet', wallet.address);
-    try {
-      await setActiveWallet(wallet);
-      console.log('connect wallet success', wallet.address);
-    } catch (error) {
-      console.error(error);
-    }
+    await setActiveWallet(wallet);
   };
+
   return (
     <div className="p-4 w-full border border-border rounded-lg flex items-center justify-between bg-secondary">
       <div className="flex items-center gap-2">
         {wallet.address}
         {wallet.imported && <Badge>Imported</Badge>}
+        {address === wallet.address && (
+          <Badge className="bg-success text-success-foreground">
+            Connected
+          </Badge>
+        )}
       </div>
       <div>
         <DropdownMenu>

@@ -3,7 +3,7 @@ import preset from '@betfinio/components/tailwind-config';
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   presets: [preset],
-  important: '#root',
+  important: 'body',
   content: ['./src/**/*.{ts,tsx,html}'],
   theme: {
     extend: {
@@ -13,6 +13,9 @@ module.exports = {
       fontFamily: {
         sans: ['Rubik', 'sans-serif'],
       },
+      colors: {
+        sidebar: 'radial-gradient(circle, var(--background) 20%, var(--secondary) 50%);',
+      }
     },
   },
 };
