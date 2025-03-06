@@ -1,6 +1,4 @@
-import { UserCircleIcon } from 'lucide-react';
-import { useAccount } from 'wagmi';
-import { truncateEthAddress, ZeroAddress } from '@betfinio/abi';
+import { ZeroAddress, truncateEthAddress } from '@betfinio/abi';
 import {
   Button,
   Drawer,
@@ -12,6 +10,9 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@betfinio/components/ui';
+import { Link } from '@tanstack/react-router';
+import { UserCircleIcon } from 'lucide-react';
+import { useAccount } from 'wagmi';
 
 function Wallet() {
   const { address = ZeroAddress } = useAccount();
@@ -33,8 +34,12 @@ function Wallet() {
           <DrawerTitle>Are you absolutely sure?</DrawerTitle>
           <DrawerDescription>This action cannot be undone.</DrawerDescription>
         </DrawerHeader>
-        <DrawerFooter>
-          <Button>Submit</Button>
+        <DrawerFooter className="flex flex-col justify-center items-center gap-2">
+          <DrawerClose asChild>
+            <Link to="/wallet">
+              <Button>Wallet management</Button>
+            </Link>
+          </DrawerClose>
           <DrawerClose>
             <Button variant="outline">Cancel</Button>
           </DrawerClose>
