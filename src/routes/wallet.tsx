@@ -1,6 +1,6 @@
 import { ZeroAddress, truncateEthAddress } from '@betfinio/abi';
 import { BetLogo } from '@betfinio/components/icons';
-import QRCodeStyling from 'qr-code-styling';
+import { QRCode } from 'react-qrcode-logo';
 
 import { BetValue } from '@betfinio/components/shared';
 import {
@@ -358,31 +358,6 @@ function ReceiveAction() {
 		navigator.clipboard.writeText(address);
 		toast.success('Address copied to clipboard');
 	};
-	const ref = useRef<HTMLDivElement>(null);
-
-	const qrCode = new QRCodeStyling({
-		width: 300,
-		height: 300,
-		type: 'svg',
-		image: 'https://betfin.io/favicon.svg',
-		dotsOptions: {
-			color: '#4267b2',
-			type: 'rounded',
-		},
-		imageOptions: {
-			crossOrigin: 'anonymous',
-			margin: 20,
-		},
-	});
-	useEffect(() => {
-		qrCode.append(ref.current);
-	}, [address]);
-
-	useEffect(() => {
-		qrCode.update({
-			data: address,
-		});
-	}, [address]);
 	return (
 		<Drawer>
 			<DrawerTrigger asChild>
@@ -399,9 +374,19 @@ function ReceiveAction() {
 				</DrawerHeader>
 				<DrawerDescription className="hidden" />
 				<div className="flex flex-col gap-2 items-center justify-center p-4">
-					<div className="w-[300px] aspect-square" ref={ref} />
-					<div className="text-sm text-muted-foreground">Scan the QR code to receive POL</div>
-					<div className="text-center break-all text-sm">{address}</div>
+					<QRCode
+						value={address}
+						qrStyle="dots"
+						eyeRadius={{ inner: 2, outer: 20 }}
+						size={200}
+						quietZone={10}
+						logoImage="https://betfin.io/favicon.svg"
+						removeQrCodeBehindLogo={true}
+						logoPadding={5}
+						style={{ borderRadius: '20px' }}
+					/>
+					<div className="text-sm text-muted-foreground">Scan the QR code to receive POL or BET</div>
+					<div className="text-center break-all text-xs">{address}</div>
 					<Button variant="ghost" className="w-full gap-2 text-primary" onClick={handleCopyAddress}>
 						<CopyIcon className="size-4 text-primary" />
 						Copy address

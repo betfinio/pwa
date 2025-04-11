@@ -1,6 +1,7 @@
 import logger from '@/src/config/logger';
 import { mfQueryClient } from '@/src/config/query';
 import type { ContextApiModule, ContextConfigModule, ContextUtilsModule, MintResult, RemoteModule } from '@/src/types';
+import { toast } from '@betfinio/components/ui';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import type { Address } from 'viem';
@@ -127,13 +128,14 @@ export const useMintPass = () => {
 			const { inviter, parent } = mintResult as { inviter: Address; parent: Address };
 			const result = await api.mint(address, inviter, parent, config.wagmiConfig);
 			logger.success('minted pass', result);
-
+			mfQueryClient.invalidateQueries({ queryKey: ['isMember'] });
 			return mintResult;
 		},
 		onError: (error) => {
 			logger.error('error', error);
 		},
 		onSuccess: (data) => {
+			toast.success('Pass is minted!');
 			logger.success('success', data);
 		},
 	});
