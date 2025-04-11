@@ -1,5 +1,7 @@
 import { ZeroAddress, truncateEthAddress } from '@betfinio/abi';
-import { BetLogo, Polygon } from '@betfinio/components/icons';
+import { BetLogo } from '@betfinio/components/icons';
+import QRCodeStyling from 'qr-code-styling';
+
 import { BetValue } from '@betfinio/components/shared';
 import {
 	Button,
@@ -25,6 +27,7 @@ import { Link } from '@tanstack/react-router';
 import {
 	ArrowLeftRightIcon,
 	ChevronRightIcon,
+	CopyIcon,
 	DownloadIcon,
 	LoaderIcon,
 	LogOutIcon,
@@ -36,7 +39,7 @@ import {
 	WalletIcon,
 } from 'lucide-react';
 import { motion } from 'motion/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Address } from 'viem';
 import { useAccount } from 'wagmi';
 import { useBalance as usePolBalance } from 'wagmi';
@@ -344,13 +347,68 @@ function ActionsSection() {
 				</motion.div>
 				<div className="text-sm">Send</div>
 			</div>
-			<div className="flex flex-col items-center gap-2 w-full">
-				<motion.div whileTap={{ scale: 0.95 }} className="border border-border rounded-xl p-4 bg-background-lighter cursor-pointer">
-					<QrCodeIcon className="size-6 text-primary" />
-				</motion.div>
-				<div className="text-sm">Receive</div>
-			</div>
+			<ReceiveAction />
 		</div>
+	);
+}
+
+function ReceiveAction() {
+	const { address = ZeroAddress } = useAccount();
+	const handleCopyAddress = () => {
+		navigator.clipboard.writeText(address);
+		toast.success('Address copied to clipboard');
+	};
+	const ref = useRef<HTMLDivElement>(null);
+
+	const qrCode = new QRCodeStyling({
+		width: 300,
+		height: 300,
+		type: 'svg',
+		image: 'https://betfin.io/favicon.svg',
+		dotsOptions: {
+			color: '#4267b2',
+			type: 'rounded',
+		},
+		imageOptions: {
+			crossOrigin: 'anonymous',
+			margin: 20,
+		},
+	});
+	useEffect(() => {
+		qrCode.append(ref.current);
+	}, [address]);
+
+	useEffect(() => {
+		qrCode.update({
+			data: address,
+		});
+	}, [address]);
+	return (
+		<Drawer>
+			<DrawerTrigger asChild>
+				<div className="flex flex-col items-center gap-2 w-full">
+					<motion.div whileTap={{ scale: 0.95 }} className="border border-border rounded-xl p-4 bg-background-lighter cursor-pointer">
+						<QrCodeIcon className="size-6 text-primary" />
+					</motion.div>
+					<div className="text-sm">Receive</div>
+				</div>
+			</DrawerTrigger>
+			<DrawerContent>
+				<DrawerHeader>
+					<DrawerTitle>Receive</DrawerTitle>
+				</DrawerHeader>
+				<DrawerDescription className="hidden" />
+				<div className="flex flex-col gap-2 items-center justify-center p-4">
+					<div className="w-[300px] aspect-square" ref={ref} />
+					<div className="text-sm text-muted-foreground">Scan the QR code to receive POL</div>
+					<div className="text-center break-all text-sm">{address}</div>
+					<Button variant="ghost" className="w-full gap-2 text-primary" onClick={handleCopyAddress}>
+						<CopyIcon className="size-4 text-primary" />
+						Copy address
+					</Button>
+				</div>
+			</DrawerContent>
+		</Drawer>
 	);
 }
 
