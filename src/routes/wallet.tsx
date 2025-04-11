@@ -44,7 +44,7 @@ import type { Address } from 'viem';
 import { useAccount } from 'wagmi';
 import { useBalance as usePolBalance } from 'wagmi';
 import SingleWallet from '../components/wallet/SingleWallet';
-import { useAllowance, useBalance, useIsMember, useMintPass } from '../lib/query/context';
+import { useAllowance, useBalance, useIncreaseAllowance, useIsMember, useMintPass } from '../lib/query/context';
 
 function WalletPage() {
 	const { wallets, ready: walletsReady } = useWallets();
@@ -373,7 +373,7 @@ function ReceiveAction() {
 					<DrawerTitle>Receive</DrawerTitle>
 				</DrawerHeader>
 				<DrawerDescription className="hidden" />
-				<div className="flex flex-col gap-2 items-center justify-center p-4">
+				<div className="flex flex-col gap-2 items-center justify-center p-4 min-h-[50vh]">
 					<QRCode
 						value={address}
 						qrStyle="dots"
@@ -403,6 +403,10 @@ function BalanceSection() {
 	const { data: balance = 0n } = useBalance(address);
 	const { data: allowance = 0n } = useAllowance(address);
 	const { data: polBalance } = usePolBalance({ address });
+	const { mutate: increaseAllowance, isPending } = useIncreaseAllowance();
+	const handleIncreaseAllowance = () => {
+		increaseAllowance();
+	};
 	// available is min of balance and allowance
 	const available = balance > allowance ? allowance : balance;
 	return (
@@ -423,8 +427,8 @@ function BalanceSection() {
 				<BetValue value={available} withIcon withMillify className="font-semibold" precision={3} />
 			</div>
 			<div className="flex flex-row items-end justify-end w-full">
-				<Button className="gap-2" variant="outline">
-					<ArrowLeftRightIcon className="size-4" />
+				<Button className="gap-2" variant="outline" onClick={handleIncreaseAllowance} disabled={isPending}>
+					{isPending ? <LoaderIcon className="size-4 animate-spin" /> : <ArrowLeftRightIcon className="size-4" />}
 					Adjust spending limit
 				</Button>
 			</div>

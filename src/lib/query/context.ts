@@ -80,6 +80,39 @@ export const useAllowance = (address: Address) => {
 	);
 };
 
+export const useIncreaseAllowance = () => {
+	return useMutation(
+		{
+			mutationFn: async () => {
+				logger.start('fetching api');
+				// get api from context
+				const api = await loadRemoteModule<ContextApiModule>(MODULE, 'lib/api');
+				if (!api) {
+					throw new Error('Context api not found');
+				}
+				// get config from context
+				const config = await loadRemoteModule<ContextConfigModule>(MODULE, 'config');
+				if (!config) {
+					throw new Error('Context config not found');
+				}
+				logger.success('fetched api');
+				const result = await api.increaseAllowance(config.wagmiConfig);
+				logger.success('incremented allowance', result);
+				mfQueryClient.invalidateQueries({ queryKey: ['allowance'] });
+				return result;
+			},
+			onError: (error) => {
+				logger.error('error', error);
+			},
+			onSuccess: (data) => {
+				toast.success('Allowance increased!');
+				logger.success('success', data);
+			},
+		},
+		mfQueryClient,
+	);
+};
+
 export const useMintPass = () => {
 	return useMutation<any, Error, { address: Address; ref: string }>({
 		mutationFn: async ({ address, ref }) => {

@@ -63,6 +63,7 @@ export interface ContextApiModule {
 	fetchBalance: (address: Address, config: Config, block?: bigint) => Promise<bigint>;
 	fetchAllowance: (address: Address, config: Config) => Promise<bigint>;
 	isMember: (address: Address, config: Config) => Promise<boolean>;
+	increaseAllowance: (config: Config) => Promise<WriteContractReturnType>;
 	mint: (address: Address, inviter: Address, parent: Address, config: Config) => Promise<WriteContractReturnType>;
 }
 export interface ContextUtilsModule {
