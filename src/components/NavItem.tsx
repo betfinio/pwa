@@ -36,7 +36,6 @@ const NavItem: FC<NavItemProps> = ({ icon, label, href, children, external = fal
 	const [isOpen, setIsOpen] = useState(false);
 	const { state: sidebarState, setOpen, setOpenMobile } = useSidebar();
 	const { data: manifest } = useContextManifest(mfQueryClient);
-	console.log(manifest?.sidebar);
 
 	// Close collapsible when sidebar state changes
 	useEffect(() => {
@@ -47,7 +46,6 @@ const NavItem: FC<NavItemProps> = ({ icon, label, href, children, external = fal
 
 	const labelTranslated = t(label as string, { defaultValue: label });
 	const handleOnClick = () => {
-		console.log('clicked');
 		setOpenMobile(false);
 		if (onClick) {
 			onClick();

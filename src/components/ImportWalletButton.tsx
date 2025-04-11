@@ -1,5 +1,6 @@
 import { useImportWallet, usePrivy } from '@privy-io/react-auth';
 import { useState } from 'react';
+import logger from '../config/logger';
 
 function ImportWalletButton() {
 	const { ready, authenticated } = usePrivy();
@@ -7,12 +8,12 @@ function ImportWalletButton() {
 	const [privateKey, setPrivateKey] = useState('');
 
 	const handleImport = async () => {
-		console.log('Importing wallet with private key:', privateKey);
+		logger.log('Importing wallet with private key:', privateKey);
 		try {
 			const wallet = await importWallet({ privateKey: privateKey });
-			console.log('Wallet imported successfully:', wallet);
+			logger.log('Wallet imported successfully:', wallet);
 		} catch (error) {
-			console.error('Failed to import wallet:', error);
+			logger.error('Failed to import wallet:', error);
 		}
 	};
 

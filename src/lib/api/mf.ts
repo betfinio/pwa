@@ -1,3 +1,4 @@
+import logger from '@/src/config/logger';
 import type { Manifest, RemoteModule } from '@/src/types';
 import { loadRemote, loadShare, registerRemotes } from '@module-federation/enhanced/runtime';
 
@@ -23,7 +24,7 @@ export async function getManifest(): Promise<Manifest | null> {
 		]);
 		return manifest;
 	} catch (e) {
-		console.error('error parsing manifest', e);
+		logger.error('error parsing manifest', e);
 		return null;
 	}
 }

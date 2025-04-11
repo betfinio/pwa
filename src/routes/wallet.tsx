@@ -4,6 +4,7 @@ import { ArrowLeftIcon, ImportIcon, LoaderIcon, PlusIcon } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
 import SingleWallet from '../components/wallet/SingleWallet';
+import logger from '../config/logger';
 function WalletPage() {
 	const { wallets } = useWallets();
 	const { ready, connectOrCreateWallet, logout } = usePrivy();
@@ -62,7 +63,7 @@ function AddNewWallet() {
 			setOpen(false);
 			setLoading(false);
 		} catch (error) {
-			console.error(error);
+			logger.error(error);
 			setLoading(false);
 		}
 	};
