@@ -1,7 +1,7 @@
-import type { QueryClient, UseQueryResult } from '@tanstack/react-query';
+import type { QueryClient } from '@tanstack/react-query';
 import type { i18n } from 'i18next';
 import type { PropsWithChildren } from 'react';
-import type { Address } from 'viem';
+import type { Address, WriteContractReturnType } from 'viem';
 import type { Config } from 'wagmi';
 
 export interface BetfinProvider {
@@ -43,9 +43,32 @@ export interface ContextConfigModule {
 	wagmiConfig: Config;
 	queryClient: QueryClient;
 }
+
+export type InviteCode = Partial<{
+	inviter: Address;
+	parent: Address;
+	type: string;
+}>;
+
+export type InviteRef = Partial<{
+	inviter: number;
+	parent: number;
+	type: 'S' | 'N';
+	side: 'L' | 'R';
+}>;
+
+export type MintResult = { error: string } | { address: Address; inviter: Address; parent: Address };
+
 export interface ContextApiModule {
 	fetchBalance: (address: Address, config: Config, block?: bigint) => Promise<bigint>;
 	fetchAllowance: (address: Address, config: Config) => Promise<bigint>;
+	isMember: (address: Address, config: Config) => Promise<boolean>;
+	mint: (address: Address, inviter: Address, parent: Address, config: Config) => Promise<WriteContractReturnType>;
+}
+export interface ContextUtilsModule {
+	validateRef: (search: Record<string, unknown>) => Record<string, unknown>;
+	handleCodeMint: (code: InviteCode, address: Address) => Promise<MintResult>;
+	handleRefMint: (ref: InviteRef, address: Address, config: Config) => Promise<MintResult>;
 }
 
 export interface ContextContextModule {

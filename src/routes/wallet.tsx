@@ -1,5 +1,5 @@
 import { ZeroAddress, truncateEthAddress } from '@betfinio/abi';
-import { BetLogo } from '@betfinio/components/icons';
+import { BetLogo, Polygon } from '@betfinio/components/icons';
 import { BetValue } from '@betfinio/components/shared';
 import {
 	Button,
@@ -16,6 +16,7 @@ import {
 	DrawerHeader,
 	DrawerTitle,
 	DrawerTrigger,
+	Input,
 	toast,
 } from '@betfinio/components/ui';
 import { useImportWallet, useLogout, usePrivy, useWallets } from '@privy-io/react-auth';
@@ -38,12 +39,13 @@ import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import type { Address } from 'viem';
 import { useAccount } from 'wagmi';
+import { useBalance as usePolBalance } from 'wagmi';
 import SingleWallet from '../components/wallet/SingleWallet';
-import { useAllowance, useBalance } from '../lib/query/context';
+import { useAllowance, useBalance, useIsMember, useMintPass } from '../lib/query/context';
 
 function WalletPage() {
 	const { wallets, ready: walletsReady } = useWallets();
-	const { ready, login, authenticated, user } = usePrivy();
+	const { ready, login, authenticated } = usePrivy();
 
 	if (!ready || !walletsReady) {
 		return (
@@ -85,6 +87,46 @@ function WalletPage() {
 			<BalanceSection />
 			<ActionsSection />
 			<AuthSection />
+		</div>
+	);
+}
+
+function MemberWarning() {
+	const { address = ZeroAddress } = useAccount();
+	const [code, setCode] = useState<string>('');
+	const { mutate: mintPass, isPending } = useMintPass();
+	const handleMintPass = () => {
+		mintPass({ address, ref: code });
+	};
+	return (
+		<div className="flex flex-row gap-2 justify-between items-center border border-destructive rounded-xl p-4 bg-background-lighter cursor-pointer">
+			<div className="">You are not a Betfin member</div>
+			<Drawer>
+				<DrawerTrigger asChild>
+					<Button size="sm">Mint pass</Button>
+				</DrawerTrigger>
+				<DrawerContent>
+					<DrawerHeader>
+						<DrawerTitle>Mint a pass</DrawerTitle>
+					</DrawerHeader>
+					<DrawerDescription className="hidden" />
+					<div className="flex flex-col gap-2 justify-between w-full p-4">
+						<div className="flex flex-col gap-2">
+							<h3 className="text-sm text-muted-foreground">Enter your referral code</h3>
+							<Input
+								type="text"
+								className="w-full "
+								value={code}
+								onChange={(e) => setCode(e.target.value)}
+								placeholder="e.g. 1234567890 or 0x1234567890abcdef"
+							/>
+							<Button className="w-full rounded-xl" onClick={handleMintPass} disabled={isPending}>
+								{isPending ? <LoaderIcon className="size-4 animate-spin" /> : 'Mint a pass'}
+							</Button>
+						</div>
+					</div>
+				</DrawerContent>
+			</Drawer>
 		</div>
 	);
 }
@@ -317,10 +359,18 @@ function BalanceSection() {
 
 	const { data: balance = 0n } = useBalance(address);
 	const { data: allowance = 0n } = useAllowance(address);
+	const { data: polBalance } = usePolBalance({ address });
 	// available is min of balance and allowance
 	const available = balance > allowance ? allowance : balance;
 	return (
 		<div className="flex flex-col gap-4 justify-between items-center border border-border rounded-xl p-4 bg-background-lighter cursor-pointer">
+			<div className="flex flex-row gap-2 justify-between items-center w-full">
+				<div className="text-muted-foreground">POL balance</div>
+				<div className="flex flex-row gap-1 items-center">
+					<BetValue value={polBalance?.value ?? 0n} postfix="POL" withMillify className="font-semibold" precision={3} />
+					POL
+				</div>
+			</div>
 			<div className="flex flex-row gap-2 justify-between items-center w-full">
 				<div className="text-muted-foreground">Wallet balance</div>
 				<BetValue value={balance} withIcon withMillify className="font-semibold" precision={3} />
@@ -340,6 +390,14 @@ function BalanceSection() {
 }
 function ProfileLink() {
 	const { address = ZeroAddress } = useAccount();
+
+	const { data: isMember } = useIsMember(address);
+
+	console.log(address, isMember);
+
+	if (!isMember) {
+		return <MemberWarning />;
+	}
 
 	return (
 		<Link to="/profile">

@@ -1,12 +1,37 @@
+import logger from '@/src/config/logger';
 import { mfQueryClient } from '@/src/config/query';
-import type { ContextApiModule, RemoteModule } from '@/src/types';
-import { useQuery } from '@tanstack/react-query';
-import { useCallback, useEffect, useState } from 'react';
+import type { ContextApiModule, ContextConfigModule, ContextUtilsModule, MintResult, RemoteModule } from '@/src/types';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useCallback } from 'react';
 import type { Address } from 'viem';
 import { useConfig } from 'wagmi';
+import { loadRemoteModule } from '../api/mf';
 import { useLoadRemoteModule } from './mf';
 
 const MODULE: RemoteModule = 'betfinio_context';
+
+export const useIsMember = (address: Address) => {
+	const config = useConfig();
+	const api = useLoadRemoteModule<ContextApiModule>(mfQueryClient, MODULE, 'lib/api');
+
+	const func = useCallback(
+		async (addr: Address) => {
+			if (api) {
+				return await api.isMember(addr, config);
+			}
+			return false;
+		},
+		[api],
+	);
+
+	return useQuery<boolean, Error>(
+		{
+			queryKey: ['isMember', address, api],
+			queryFn: () => func(address),
+		},
+		mfQueryClient,
+	);
+};
 
 export const useBalance = (address: Address) => {
 	const config = useConfig();
@@ -52,4 +77,64 @@ export const useAllowance = (address: Address) => {
 		},
 		mfQueryClient,
 	);
+};
+
+export const useMintPass = () => {
+	return useMutation<any, Error, { address: Address; ref: string }>({
+		mutationFn: async ({ address, ref }) => {
+			logger.start('fetching api');
+			// get utils from context
+			const utils = await loadRemoteModule<ContextUtilsModule>(MODULE, 'lib/utils');
+			if (!utils) {
+				throw new Error('Context utils not found');
+			}
+			// get api from context
+			const api = await loadRemoteModule<ContextApiModule>(MODULE, 'lib/api');
+			if (!api) {
+				throw new Error('Context api not found');
+			}
+			// get config from context
+			const config = await loadRemoteModule<ContextConfigModule>(MODULE, 'config');
+			if (!config) {
+				throw new Error('Context config not found');
+			}
+			logger.success('fetched api');
+			const validateRef = utils.validateRef;
+
+			// check if ref old is new
+			const isCode = ref.startsWith('0x');
+			const input = isCode ? { code: ref } : { ref: ref };
+			logger.info(isCode ? 'code' : 'ref');
+			// check if ref is valid
+			const validRef = validateRef(input);
+			if (Object.keys(validRef).length === 0) {
+				throw new Error('Invalid ref');
+			}
+			logger.start('fetching mint info');
+			let mintResult: MintResult = { error: 'invalid ref' };
+			// mint pass
+			if (isCode) {
+				mintResult = await utils.handleCodeMint(validRef, address);
+			} else {
+				mintResult = await utils.handleRefMint(validRef, address, config.wagmiConfig);
+			}
+			const isError = 'error' in mintResult;
+			logger.success('fetched mint info', mintResult);
+			if (isError) {
+				// @ts-ignore
+				throw new Error(mintResult.error);
+			}
+			const { inviter, parent } = mintResult as { inviter: Address; parent: Address };
+			const result = await api.mint(address, inviter, parent, config.wagmiConfig);
+			logger.success('minted pass', result);
+
+			return mintResult;
+		},
+		onError: (error) => {
+			logger.error('error', error);
+		},
+		onSuccess: (data) => {
+			logger.success('success', data);
+		},
+	});
 };
