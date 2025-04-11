@@ -1,6 +1,6 @@
 [
-  {
-    "key": "betfin.io",
-    "url": "https://gist.githubusercontent.com/bf-monster/ffc57d0e16c344feb954d0f0b2870395/raw/7014f43605ed0160ecbc07b98f09a6b27c2e54ba/bf-manifest-io.json"
-  }
+	{
+		"key": "betfin.dev",
+		"url": "https://gist.githubusercontent.com/bf-monster/95bc958deef39875af3de15240ad9c38/raw/bf-manifest-dev.json"
+	}
 ]

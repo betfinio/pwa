@@ -7,28 +7,20 @@ import type { AcademyModule, I18nModule, RemoteModule } from '@/src/types';
 const MODULE: RemoteModule = 'betfinio_academy';
 
 function IndexPage() {
-  useLoadRemoteModule(mfQueryClient, MODULE, 'style');
-  const academy = useLoadRemoteModule<AcademyModule>(
-    mfQueryClient,
-    MODULE,
-    'route/layout',
-  );
+	useLoadRemoteModule(mfQueryClient, MODULE, 'style');
+	const academy = useLoadRemoteModule<AcademyModule>(mfQueryClient, MODULE, 'route/layout');
 
-  const instance = useLoadRemoteModule<I18nModule>(
-    mfQueryClient,
-    MODULE,
-    'i18n',
-  );
+	const instance = useLoadRemoteModule<I18nModule>(mfQueryClient, MODULE, 'i18n');
 
-  if (!academy || !instance) return null;
+	if (!academy || !instance) return null;
 
-  const Component = academy.Layout;
+	const Component = academy.Layout;
 
-  return (
-    <I18nextProvider i18n={instance.default}>
-      <Component />
-    </I18nextProvider>
-  );
+	return (
+		<I18nextProvider i18n={instance.default}>
+			<Component />
+		</I18nextProvider>
+	);
 }
 
 export default IndexPage;

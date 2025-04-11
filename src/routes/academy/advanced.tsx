@@ -7,28 +7,20 @@ import type { AcademyModule, I18nModule, RemoteModule } from '@/src/types';
 const MODULE: RemoteModule = 'betfinio_academy';
 
 function AdvancedPage() {
-  useLoadRemoteModule(mfQueryClient, MODULE, 'style');
-  const advanced = useLoadRemoteModule<AcademyModule>(
-    mfQueryClient,
-    MODULE,
-    'route/advanced',
-  );
+	useLoadRemoteModule(mfQueryClient, MODULE, 'style');
+	const advanced = useLoadRemoteModule<AcademyModule>(mfQueryClient, MODULE, 'route/advanced');
 
-  const instance = useLoadRemoteModule<I18nModule>(
-    mfQueryClient,
-    MODULE,
-    'i18n',
-  );
+	const instance = useLoadRemoteModule<I18nModule>(mfQueryClient, MODULE, 'i18n');
 
-  if (!advanced || !instance) return null;
+	if (!advanced || !instance) return null;
 
-  const Component = advanced.AdvancedPage;
+	const Component = advanced.AdvancedPage;
 
-  return (
-    <I18nextProvider i18n={instance.default}>
-      <Component />
-    </I18nextProvider>
-  );
+	return (
+		<I18nextProvider i18n={instance.default}>
+			<Component />
+		</I18nextProvider>
+	);
 }
 
 export default AdvancedPage;

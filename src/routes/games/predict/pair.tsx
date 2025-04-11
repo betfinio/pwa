@@ -6,28 +6,20 @@ import { I18nextProvider } from 'react-i18next';
 const MODULE: RemoteModule = 'betfinio_predict';
 
 function PredictPair() {
-  useLoadRemoteModule(mfQueryClient, MODULE, 'style');
-  const predict = useLoadRemoteModule<PredictModule>(
-    mfQueryClient,
-    MODULE,
-    'route',
-  );
+	useLoadRemoteModule(mfQueryClient, MODULE, 'style');
+	const predict = useLoadRemoteModule<PredictModule>(mfQueryClient, MODULE, 'route');
 
-  const instance = useLoadRemoteModule<I18nModule>(
-    mfQueryClient,
-    MODULE,
-    'i18n',
-  );
+	const instance = useLoadRemoteModule<I18nModule>(mfQueryClient, MODULE, 'i18n');
 
-  if (!predict || !instance) return null;
+	if (!predict || !instance) return null;
 
-  const Component = predict.PredictPage;
+	const Component = predict.PredictPage;
 
-  return (
-    <I18nextProvider i18n={instance.default}>
-      <Component />
-    </I18nextProvider>
-  );
+	return (
+		<I18nextProvider i18n={instance.default}>
+			<Component />
+		</I18nextProvider>
+	);
 }
 
 export default PredictPair;

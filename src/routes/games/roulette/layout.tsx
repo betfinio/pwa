@@ -6,18 +6,14 @@ import { I18nextProvider } from 'react-i18next';
 
 const MODULE: RemoteModule = 'betfinio_roulette';
 function RouletteLayout() {
-  useLoadRemoteModule(mfQueryClient, MODULE, 'style');
-  const instance = useLoadRemoteModule<I18nModule>(
-    mfQueryClient,
-    MODULE,
-    'i18n',
-  );
-  if (!instance) return null;
-  return (
-    <I18nextProvider i18n={instance.default}>
-      <Outlet />
-    </I18nextProvider>
-  );
+	useLoadRemoteModule(mfQueryClient, MODULE, 'style');
+	const instance = useLoadRemoteModule<I18nModule>(mfQueryClient, MODULE, 'i18n');
+	if (!instance) return null;
+	return (
+		<I18nextProvider i18n={instance.default}>
+			<Outlet />
+		</I18nextProvider>
+	);
 }
 
 export default RouletteLayout;

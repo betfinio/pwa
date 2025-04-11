@@ -6,24 +6,20 @@ import { I18nextProvider } from 'react-i18next';
 const MODULE: RemoteModule = 'betfinio_luro';
 
 function LuroInterval() {
-  useLoadRemoteModule(mfQueryClient, MODULE, 'style');
-  const luro = useLoadRemoteModule<LuroModule>(mfQueryClient, MODULE, 'route');
+	useLoadRemoteModule(mfQueryClient, MODULE, 'style');
+	const luro = useLoadRemoteModule<LuroModule>(mfQueryClient, MODULE, 'route');
 
-  const instance = useLoadRemoteModule<I18nModule>(
-    mfQueryClient,
-    MODULE,
-    'i18n',
-  );
+	const instance = useLoadRemoteModule<I18nModule>(mfQueryClient, MODULE, 'i18n');
 
-  if (!luro || !instance) return null;
+	if (!luro || !instance) return null;
 
-  const Component = luro.LuroPage;
+	const Component = luro.LuroPage;
 
-  return (
-    <I18nextProvider i18n={instance.default}>
-      <Component />
-    </I18nextProvider>
-  );
+	return (
+		<I18nextProvider i18n={instance.default}>
+			<Component />
+		</I18nextProvider>
+	);
 }
 
 export default LuroInterval;

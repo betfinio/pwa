@@ -1,246 +1,129 @@
 import {
-  Button,
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-  Separator,
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarTrigger,
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+	Separator,
+	Sidebar,
+	SidebarContent,
+	SidebarFooter,
+	SidebarHeader,
+	SidebarMenu,
+	SidebarMenuButton,
+	SidebarMenuItem,
+	SidebarTrigger,
+	cn,
+	useSidebar,
 } from '@betfinio/components';
-import {
-  Bet,
-  BetfinLogo,
-  Lobby,
-  LuckyRound,
-  Predict,
-  Roulette,
-  Stones,
-  Ticket,
-} from '@betfinio/components/icons';
+import { BetLogo, BetfinLogo } from '@betfinio/components/icons';
 import { Link } from '@tanstack/react-router';
-import {
-  BookOpenIcon,
-  ChartAreaIcon,
-  ChevronDownIcon,
-  HeadphonesIcon,
-  MessageCircleIcon,
-} from 'lucide-react';
+import { Globe, MessageCircleIcon } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useTranslation } from 'react-i18next';
+import { games, navigation, others } from '../config/links';
 import { mfQueryClient } from '../config/query';
-import { useContextManifest } from '../lib/query/mf';
+import i18n from '../i18n';
+import { useContextManifest, useLoadRemoteModule } from '../lib/query/mf';
+import type { ContextContextModule, RemoteModule } from '../types';
+import NavItem from './NavItem';
 
-const gameLinks: Record<string, string> = {
-  roulette: '/games/roulette/live',
-  'roulette-single': '/games/roulette/single',
-  'roulette-90': '/games/roulette/live/90',
-  'roulette-180': '/games/roulette/live/180',
-  predict: '/games/predict',
-  stones: '/games/stones',
-  luro: '/games/luro',
-  'luro-5m': '/games/luro/5m',
-  'luro-1d': '/games/luro/1d',
-  lottery: '/games/lottery/lotto',
+const MODULE: RemoteModule = 'betfinio_context';
+
+const languages: Record<string, any> = {
+	en: 'English',
+	cs: 'Čeština',
+	ru: 'Русский',
+	es: 'Español',
 };
-const stakingLinks: Record<string, string> = {
-  staking: '/staking',
-  'staking-conservative': '/staking/conservative',
-  'staking-dynamic': '/staking/dynamic',
-};
-const affiliateLinks: Record<string, string> = {
-  affiliate: '/affiliate',
-  'affiliate-linear-tree': '/affiliate/linear',
-  'affiliate-binary-tree': '/affiliate/binary',
-};
-const academyLinks: Record<string, string> = {
-  academy: '/academy',
-};
+
+const links = [...navigation, ...games];
 
 const CustomSidebar = () => {
-  const { data: manifest } = useContextManifest(mfQueryClient);
-  if (!manifest) return null;
-  return (
-    <Sidebar variant="floating" collapsible="icon" className="block">
-      <SidebarHeader>
-        <div className="flex items-center justify-between p-2">
-          <BetfinLogo className="w-24" />
-          <SidebarTrigger />
-        </div>
-        <Separator />
-      </SidebarHeader>
+	const { t, i18n: sharedI18n } = useTranslation('shared', { keyPrefix: 'sidebar' });
+	const { data: manifest } = useContextManifest(mfQueryClient);
+	const { state } = useSidebar();
+	const chatbot = useLoadRemoteModule<ContextContextModule>(mfQueryClient, MODULE, 'lib/context');
 
-      <SidebarContent>
-        <SidebarMenu className="gap-2">
-          <Button
-            variant="outline"
-            className="w-full rounded-lg border-primary gap-1"
-          >
-            <Bet className="w-4 h-4 text-primary" />
-            Buy BET
-          </Button>
-          <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Lobby" asChild>
-              <Link to="/app">
-                <Lobby />
-                <span>Lobby</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+	if (!chatbot || !manifest) return null;
 
-          <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Crypto Predict" asChild>
-              <Link to="/games/predict">
-                <Predict />
-                <span>Crypto Predict</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+	const { toggle: toggleChatbot } = chatbot.useChatbot();
+	const handleSupport = () => {
+		toggleChatbot();
+	};
 
-          <Collapsible className="group/collapsible">
-            <SidebarGroup>
-              <SidebarGroupLabel>
-                <CollapsibleTrigger className="flex gap-2 p-2 h-10 w-full items-center">
-                  <Roulette className="w-4 h-4" />
-                  <span>Roulette</span>
-                  <div className="flex grow justify-end">
-                    <ChevronDownIcon className="w-4 h-4 bg-foreground/20 rounded-xs transition-transform group-data-[state=open]/collapsible:rotate-180" />
-                  </div>
-                </CollapsibleTrigger>
-              </SidebarGroupLabel>
-              <CollapsibleContent>
-                <SidebarGroupContent className="gap-1 flex flex-col bg-sidebar-item/10 p-2 rounded-lg rounded-t-none">
-                  <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="1.5 mins" asChild>
-                      <Link to={gameLinks['roulette-90']}>
-                        <span>1.5 min</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="3 mins" asChild>
-                      <Link to={gameLinks['roulette-180']}>
-                        <span>3 min</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="Single player" asChild>
-                      <Link to="/games/roulette/single">
-                        <span>Single player</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarGroupContent>
-              </CollapsibleContent>
-            </SidebarGroup>
-          </Collapsible>
+	const handleLanguageChange = async (lang: string) => {
+		await i18n.changeLanguage(lang);
+	};
 
-          <Collapsible className="group/collapsible">
-            <SidebarGroup>
-              <SidebarGroupLabel>
-                <CollapsibleTrigger className="flex gap-2 p-2 h-10 w-full items-center">
-                  <LuckyRound className="w-4 h-4" />
-                  <span>Lucky Round</span>
-                  <div className="flex grow justify-end">
-                    <ChevronDownIcon className="w-4 h-4 bg-foreground/20 rounded-xs transition-transform group-data-[state=open]/collapsible:rotate-180" />
-                  </div>
-                </CollapsibleTrigger>
-              </SidebarGroupLabel>
-              <CollapsibleContent>
-                <SidebarGroupContent className="gap-1 flex flex-col bg-sidebar-item/10 p-2 rounded-lg rounded-t-none">
-                  <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="5 mins" asChild>
-                      <Link to={gameLinks['luro-5m']}>
-                        <span>5 min</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="1 day" asChild>
-                      <Link to={gameLinks['luro-1d']}>
-                        <span>1 day</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarGroupContent>
-              </CollapsibleContent>
-            </SidebarGroup>
-          </Collapsible>
+	const minimized = state === 'collapsed';
+	return (
+		<Sidebar variant="floating" collapsible="icon" wrapperClassName="md:block" className="border-border">
+			<SidebarHeader>
+				<AnimatePresence mode="wait">
+					{minimized ? (
+						<motion.div className="px-3 h-[54px] py-2 flex items-center justify-start" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+							<Link to={'/app'}>
+								<BetLogo />
+							</Link>
+						</motion.div>
+					) : (
+						<motion.div
+							className="flex h-[54px] flex-row items-center gap-2 px-3 p-2 w-full justify-between"
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							exit={{ opacity: 0 }}
+						>
+							<Link to={'/app'}>
+								<BetfinLogo className="w-24" />
+							</Link>
+							<SidebarTrigger />
+						</motion.div>
+					)}
+				</AnimatePresence>
+				<Separator />
+			</SidebarHeader>
 
-          <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Stones" asChild>
-              <Link to={gameLinks.stones}>
-                <Stones />
-                <span>Stones</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+			<SidebarContent>
+				<SidebarMenu className="gap-2">
+					{links.map((link, index) => (
+						<NavItem key={index} {...link} />
+					))}
+					<Separator orientation="horizontal" className="opacity-0" />
+					{others.map((other, index) => (
+						<NavItem key={index} {...other} />
+					))}
+					<SidebarMenuItem onClick={handleSupport}>
+						<SidebarMenuButton tooltip={t('support')}>
+							<MessageCircleIcon className="text-foreground" />
+							<span>{t('support')}</span>
+						</SidebarMenuButton>
+					</SidebarMenuItem>
+				</SidebarMenu>
+			</SidebarContent>
+			<Separator orientation="horizontal" className="" />
 
-          <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Lotto" asChild>
-              <Link to={gameLinks.lottery}>
-                <Ticket className="text-foreground" />
-                <span>Lotto</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarContent>
-
-      <SidebarFooter>
-        <SidebarMenu className="gap-2">
-          <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Documentation">
-              <BookOpenIcon className="text-foreground" />
-              <span>Documentation</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Statistics" asChild>
-              <Link to="/statistics">
-                <ChartAreaIcon className="text-foreground" />
-                <span>Statistics</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton tooltip="FAQ">
-              <MessageCircleIcon className="text-foreground" />
-              <span>FAQ</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Support">
-              <HeadphonesIcon className="text-foreground" />
-              <span>Support</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          {/* <Select value={language}>
-            <SelectTrigger className="w-full" minimized={minimized}>
-              <div className={'flex flex-row items-center justify-start gap-2'}>
-                <Globe className={cn('w-4 h-4')} />
-                <SelectValue placeholder={'Language'} />
-              </div>
-            </SelectTrigger>
-            <SelectContent>
-              {Object.keys(languages).map((lang) => (
-                <SelectItem key={lang} value={lang}>
-                  {languages[lang]}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select> */}
-        </SidebarMenu>
-      </SidebarFooter>
-    </Sidebar>
-  );
+			<SidebarFooter>
+				<SidebarMenu className="gap-2">
+					<Select value={sharedI18n.language} onValueChange={handleLanguageChange}>
+						<SelectTrigger className={cn('w-full flex flex-row items-center justify-between gap-2', minimized && 'h-8')} minimized={minimized}>
+							<div className={cn('flex flex-row items-center justify-start gap-2 w-full', minimized && 'justify-center h-8')}>
+								<Globe className={cn('w-4 h-4')} />
+								{!minimized && <SelectValue placeholder={'Language'} />}
+							</div>
+						</SelectTrigger>
+						<SelectContent>
+							{Object.keys(languages).map((lang) => (
+								<SelectItem key={lang} value={lang}>
+									{languages[lang]}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+				</SidebarMenu>
+			</SidebarFooter>
+		</Sidebar>
+	);
 };
 
 export default CustomSidebar;
