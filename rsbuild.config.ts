@@ -7,6 +7,7 @@ export default defineConfig({
 		port: 4444,
 	},
 	html: {
+		favicon: './public/favicon.svg',
 		title: 'Betfin Wallet',
 		tags: [
 			{
