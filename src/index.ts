@@ -51,7 +51,7 @@ init({
       scope: 'default',
       shareConfig: {
         singleton: true,
-        requiredVersion: '5.66.9',
+        requiredVersion: '5.66.10',
       },
     },
     '@tanstack/react-router': {
