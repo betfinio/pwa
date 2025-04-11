@@ -1,14 +1,27 @@
 import { ZeroAddress, truncateEthAddress } from '@betfinio/abi';
 import { BetLogo } from '@betfinio/components/icons';
 import { BetValue } from '@betfinio/components/shared';
-import { Button } from '@betfinio/components/ui';
+import { Button, Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from '@betfinio/components/ui';
 import { usePrivy, useWallets } from '@privy-io/react-auth';
 import { Link } from '@tanstack/react-router';
-import { ArrowLeftRightIcon, ChevronRightIcon, LoaderIcon, LogOutIcon, QrCodeIcon, RefreshCcwIcon, ReplaceAllIcon, UploadIcon, WalletIcon } from 'lucide-react';
+import {
+	ArrowLeftRightIcon,
+	ChevronRightIcon,
+	DownloadIcon,
+	LoaderIcon,
+	LogOutIcon,
+	PlusIcon,
+	QrCodeIcon,
+	RefreshCcwIcon,
+	ReplaceAllIcon,
+	UploadIcon,
+	WalletIcon,
+} from 'lucide-react';
 import { motion } from 'motion/react';
+import { useState } from 'react';
 import { useAccount } from 'wagmi';
+import SingleWallet from '../components/wallet/SingleWallet';
 import { useAllowance, useBalance } from '../lib/query/context';
-import type { RemoteModule } from '../types';
 
 function WalletPage() {
 	const { wallets, ready: walletsReady } = useWallets();
@@ -47,13 +60,7 @@ function WalletPage() {
 function AuthSection() {
 	return (
 		<div className="flex flex-col gap-4 justify-center w-full h-full items-center">
-			<motion.div
-				whileTap={{ scale: 0.97 }}
-				className="flex flex-row gap-2 w-full justify-start items-center border border-border rounded-xl p-4 bg-background-lighter cursor-pointer"
-			>
-				<ReplaceAllIcon className="size-6 text-success" />
-				<div className="font-semibold">Change wallet</div>
-			</motion.div>
+			<ChangeWalletDrawer />
 			<motion.div
 				whileTap={{ scale: 0.97 }}
 				className="flex flex-row gap-2 w-full justify-start items-center border border-border rounded-xl p-4 bg-background-lighter cursor-pointer"
@@ -62,6 +69,103 @@ function AuthSection() {
 				<div className="font-semibold">Logout</div>
 			</motion.div>
 		</div>
+	);
+}
+
+function ChangeWalletDrawer() {
+	const { wallets } = useWallets();
+	const [open, setOpen] = useState(false);
+	return (
+		<Drawer open={open} onOpenChange={setOpen}>
+			<DrawerTrigger asChild>
+				<motion.div
+					whileTap={{ scale: 0.97 }}
+					className="flex flex-row gap-2 w-full justify-start items-center border border-border rounded-xl p-4 bg-background-lighter cursor-pointer"
+				>
+					<ReplaceAllIcon className="size-6 text-success" />
+					<div className="font-semibold">Change wallet</div>
+				</motion.div>
+			</DrawerTrigger>
+			<DrawerContent>
+				<DrawerHeader>
+					<DrawerTitle>My wallets</DrawerTitle>
+				</DrawerHeader>
+				<DrawerDescription className="hidden" />
+				<div className="min-h-[50vh] flex flex-col justify-between  p-4">
+					<div className="flex flex-col gap-2">
+						{wallets.map((wallet) => (
+							<SingleWallet key={wallet.address} wallet={wallet} onClose={() => setOpen(false)} />
+						))}
+					</div>
+					<AddWalletDrawer />
+				</div>
+			</DrawerContent>
+		</Drawer>
+	);
+}
+
+function AddWalletDrawer() {
+	const [open, setOpen] = useState(false);
+	return (
+		<Drawer open={open} onOpenChange={setOpen}>
+			<DrawerTrigger asChild>
+				<motion.div whileTap={{ scale: 0.97 }}>
+					<Button variant="outline" className="w-full border-primary gap-2">
+						<PlusIcon className="size-4" />
+						Add wallet
+					</Button>
+				</motion.div>
+			</DrawerTrigger>
+			<DrawerContent>
+				<DrawerHeader>
+					<DrawerTitle>Add wallet</DrawerTitle>
+				</DrawerHeader>
+				<DrawerDescription className="hidden" />
+				<div className="flex flex-col gap-2 p-4">
+					<motion.div whileTap={{ scale: 0.97 }}>
+						<Button variant="outline" className="w-full border-white/50 gap-2">
+							<PlusIcon className="size-4" />
+							Add a new Polygon wallet
+						</Button>
+					</motion.div>
+					<ImportWalletDrawer />
+				</div>
+			</DrawerContent>
+		</Drawer>
+	);
+}
+
+function ImportWalletDrawer() {
+	const [open, setOpen] = useState(false);
+	return (
+		<Drawer open={open} onOpenChange={setOpen}>
+			<DrawerTrigger asChild>
+				<motion.div whileTap={{ scale: 0.97 }}>
+					<Button variant="outline" className="w-full border-white/50 gap-2">
+						<DownloadIcon className="size-4" />
+						Import existing wallet
+					</Button>
+				</motion.div>
+			</DrawerTrigger>
+			<DrawerContent>
+				<DrawerHeader>
+					<DrawerTitle>Import wallet</DrawerTitle>
+				</DrawerHeader>
+				<DrawerDescription className="hidden" />
+				<div className="flex flex-col gap-2 p-4 min-h-[50vh] justify-between w-full">
+					<div className="flex flex-col gap-2">
+						<h3 className="text-sm text-muted-foreground">Paste your private key</h3>
+						<textarea placeholder="e.g. 0x1234567890abcdef" className="w-full border border-border rounded-xl p-4 h-[25vh] bg-background-lighter" />
+					</div>
+					<motion.div whileTap={{ scale: 0.97 }} className="w-full">
+						<Button className="gap-2 w-full">
+							<DownloadIcon className="size-4" />
+							Import
+						</Button>
+					</motion.div>
+				</div>
+			</DrawerContent>
+		</Drawer>
 	);
 }
 

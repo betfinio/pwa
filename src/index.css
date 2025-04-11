@@ -27,5 +27,6 @@
 	html,
 	body {
 		font-family: "QuickSand", sans-serif;
+		touch-action: none;
 	}
 }

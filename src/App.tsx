@@ -1,3 +1,4 @@
+import { SonnerToaster } from '@betfinio/components';
 import { PrivyProvider } from '@privy-io/react-auth';
 import { WagmiProvider } from '@privy-io/wagmi';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -46,6 +47,7 @@ function App() {
 					<QueryClientProvider client={config.queryClient}>
 						<WagmiProvider config={config.wagmiConfig}>
 							<RouterProvider router={router} />
+							<SonnerToaster />
 						</WagmiProvider>
 					</QueryClientProvider>
 				</PrivyProvider>
