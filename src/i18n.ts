@@ -4,13 +4,7 @@ import { initReactI18next } from 'react-i18next';
 const instance = i18n.createInstance().use(initReactI18next);
 
 instance.init({
-	resources: {
-		shared: {
-			translation: {
-				shared: 'shared',
-			},
-		},
-	},
+	resources: {},
 	supportedLngs: ['en', 'ru', 'cs', 'es'],
 	fallbackLng: 'en',
 	interpolation: { escapeValue: false },

@@ -25,7 +25,7 @@ function Switcher() {
 
 	return (
 		<Select defaultValue={selected} value={selected} onValueChange={handleChange}>
-			<SelectTrigger className="max-w-[150px]">
+			<SelectTrigger className="max-w-[150px] border-none bg-transparent">
 				<SelectValue placeholder="Select a context" />
 			</SelectTrigger>
 			<SelectContent>

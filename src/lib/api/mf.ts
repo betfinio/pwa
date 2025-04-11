@@ -31,16 +31,6 @@ export async function getManifest(): Promise<Manifest | null> {
 
 export async function loadRemoteModule<T>(module: RemoteModule, path: string) {
 	const config = await loadRemote<T>(`${module}/${path}`);
-	loadShare('react');
-	loadShare('react-dom');
-	loadShare('i18next');
-	loadShare('react-i18next');
-	loadShare('@tanstack/react-query');
-	loadShare('@tanstack/react-router');
-	loadShare('wagmi');
-	loadShare('@privy-io/wagmi');
-	loadShare('@privy-io/react-auth');
-	loadShare('@betfinio/components');
 	if (!config) {
 		throw new Error(`Failed to load ${module} config - ${path}`);
 	}

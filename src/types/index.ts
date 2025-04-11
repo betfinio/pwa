@@ -1,6 +1,7 @@
-import type { QueryClient } from '@tanstack/react-query';
+import type { QueryClient, UseQueryResult } from '@tanstack/react-query';
 import type { i18n } from 'i18next';
 import type { PropsWithChildren } from 'react';
+import type { Address } from 'viem';
 import type { Config } from 'wagmi';
 
 export interface BetfinProvider {
@@ -41,6 +42,10 @@ export interface ContextTranslationsModule {
 export interface ContextConfigModule {
 	wagmiConfig: Config;
 	queryClient: QueryClient;
+}
+export interface ContextApiModule {
+	fetchBalance: (address: Address, config: Config, block?: bigint) => Promise<bigint>;
+	fetchAllowance: (address: Address, config: Config) => Promise<bigint>;
 }
 
 export interface ContextContextModule {

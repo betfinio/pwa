@@ -1,13 +1,16 @@
+import { useSidebar } from '@betfinio/components/ui';
 import { Link } from '@tanstack/react-router';
-import { BellIcon, Gamepad2Icon, HouseIcon, Layers3Icon, WalletIcon } from 'lucide-react';
+import { BellIcon, Gamepad2Icon, Layers3Icon, MenuIcon, WalletIcon } from 'lucide-react';
 
 function Navigation() {
+	const { toggleSidebar } = useSidebar();
+
 	return (
 		<nav className="grid grid-cols-5 fixed w-screen bottom-0 left-0 border-t border-border p-2 pt-3 bg-background h-16 z-10">
-			<Link to="/home" className="flex flex-col items-center justify-center text-xs">
-				<HouseIcon className="w-6 h-6" />
-				Home
-			</Link>
+			<div className="flex flex-col items-center justify-center text-xs cursor-pointer" onClick={toggleSidebar}>
+				<MenuIcon className="w-6 h-6" />
+				Menu
+			</div>
 			<Link to="/games/roulette" className="flex flex-col items-center justify-center text-xs">
 				<Gamepad2Icon className="w-6 h-6" />
 				Lobby

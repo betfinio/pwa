@@ -3,6 +3,7 @@ import { SidebarProvider } from '@betfinio/components/ui';
 import { Outlet } from '@tanstack/react-router';
 import CustomSidebar from '../components/CustomSidebar';
 import Header from '../components/Header';
+import Navigation from '../components/Navigation';
 
 function Root() {
 	const { isMobile, isTablet } = useMediaQuery();
@@ -25,6 +26,7 @@ function Root() {
 					<Outlet />
 				</main>
 			</div>
+			<Navigation />
 		</SidebarProvider>
 	);
 }

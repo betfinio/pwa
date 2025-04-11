@@ -1,17 +1,22 @@
-import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@betfinio/components/ui';
-import { useCreateWallet, useImportWallet, usePrivy, useWallets } from '@privy-io/react-auth';
-import { ArrowLeftIcon, ImportIcon, LoaderIcon, PlusIcon } from 'lucide-react';
-import { AnimatePresence, motion } from 'motion/react';
-import { useState } from 'react';
-import SingleWallet from '../components/wallet/SingleWallet';
-import logger from '../config/logger';
-function WalletPage() {
-	const { wallets } = useWallets();
-	const { ready, connectOrCreateWallet, logout } = usePrivy();
+import { ZeroAddress, truncateEthAddress } from '@betfinio/abi';
+import { BetLogo } from '@betfinio/components/icons';
+import { BetValue } from '@betfinio/components/shared';
+import { Button } from '@betfinio/components/ui';
+import { usePrivy, useWallets } from '@privy-io/react-auth';
+import { Link } from '@tanstack/react-router';
+import { ArrowLeftRightIcon, ChevronRightIcon, LoaderIcon, LogOutIcon, QrCodeIcon, RefreshCcwIcon, ReplaceAllIcon, UploadIcon, WalletIcon } from 'lucide-react';
+import { motion } from 'motion/react';
+import { useAccount } from 'wagmi';
+import { useAllowance, useBalance } from '../lib/query/context';
+import type { RemoteModule } from '../types';
 
-	if (!ready) {
+function WalletPage() {
+	const { wallets, ready: walletsReady } = useWallets();
+	const { ready, connectOrCreateWallet } = usePrivy();
+
+	if (!ready || !walletsReady) {
 		return (
-			<div className="flex justify-center w-full flex-row">
+			<div className="flex justify-center w-screen flex-row h-screen items-center">
 				<LoaderIcon className="w-8 h-8 animate-spin" />
 			</div>
 		);
@@ -30,103 +35,114 @@ function WalletPage() {
 		);
 	}
 	return (
-		<div className="flex flex-col gap-2 p-4">
-			<div className="flex flex-row gap-2 items-center">
-				<Button variant="outline" onClick={() => logout()}>
-					Logout
-				</Button>
+		<div className="flex flex-col gap-4 p-4">
+			<ProfileLink />
+			<BalanceSection />
+			<ActionsSection />
+			<AuthSection />
+		</div>
+	);
+}
+
+function AuthSection() {
+	return (
+		<div className="flex flex-col gap-4 justify-center w-full h-full items-center">
+			<motion.div
+				whileTap={{ scale: 0.97 }}
+				className="flex flex-row gap-2 w-full justify-start items-center border border-border rounded-xl p-4 bg-background-lighter cursor-pointer"
+			>
+				<ReplaceAllIcon className="size-6 text-success" />
+				<div className="font-semibold">Change wallet</div>
+			</motion.div>
+			<motion.div
+				whileTap={{ scale: 0.97 }}
+				className="flex flex-row gap-2 w-full justify-start items-center border border-border rounded-xl p-4 bg-background-lighter cursor-pointer"
+			>
+				<LogOutIcon className="size-6 text-destructive" />
+				<div className="font-semibold">Logout</div>
+			</motion.div>
+		</div>
+	);
+}
+
+function ActionsSection() {
+	return (
+		<div className="grid grid-cols-4 justify-between items-center w-full">
+			<div className="flex flex-col items-center gap-2 w-full">
+				<motion.div whileTap={{ scale: 0.95 }} className="border border-border rounded-xl p-4 bg-background-lighter cursor-pointer">
+					<WalletIcon className="size-6 text-primary" />
+				</motion.div>
+				<div className="text-sm">Buy</div>
 			</div>
-			My wallets
-			<div className="flex flex-col gap-2">
-				{wallets.map((wallet) => (
-					<SingleWallet key={wallet.address} wallet={wallet} />
-				))}
-				<AddNewWallet />
+			<div className="flex flex-col items-center gap-2 w-full">
+				<motion.div whileTap={{ scale: 0.95 }} className="border border-border rounded-xl p-4 bg-background-lighter cursor-pointer">
+					<RefreshCcwIcon className="size-6 text-primary" />
+				</motion.div>
+				<div className="text-sm">Swap</div>
+			</div>
+			<div className="flex flex-col items-center gap-2 w-full">
+				<motion.div whileTap={{ scale: 0.95 }} className="border border-border rounded-xl p-4 bg-background-lighter cursor-pointer">
+					<UploadIcon className="size-6 text-primary" />
+				</motion.div>
+				<div className="text-sm">Send</div>
+			</div>
+			<div className="flex flex-col items-center gap-2 w-full">
+				<motion.div whileTap={{ scale: 0.95 }} className="border border-border rounded-xl p-4 bg-background-lighter cursor-pointer">
+					<QrCodeIcon className="size-6 text-primary" />
+				</motion.div>
+				<div className="text-sm">Receive</div>
 			</div>
 		</div>
 	);
 }
 
-function AddNewWallet() {
-	const [open, setOpen] = useState(false);
-	const [loading, setLoading] = useState(false);
-	const { createWallet } = useCreateWallet();
-	const [importing, setImporting] = useState(false);
-	const { importWallet } = useImportWallet();
-	const [privateKey, setPrivateKey] = useState('');
+function BalanceSection() {
+	const { address = ZeroAddress } = useAccount();
 
-	const handleCreateWallet = async () => {
-		if (loading) return;
-		try {
-			setLoading(true);
-			await createWallet({ createAdditional: true });
-			setOpen(false);
-			setLoading(false);
-		} catch (error) {
-			logger.error(error);
-			setLoading(false);
-		}
-	};
-	const handleImportWallet = async () => {
-		await importWallet({ privateKey });
-	};
+	const { data: balance = 0n } = useBalance(address);
+	const { data: allowance = 0n } = useAllowance(address);
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
-			<DialogTrigger asChild>
-				<Button variant="outline" className="w-full gap-1 border-border rounded-lg">
-					<PlusIcon className="w-4 h-4" />
-					Add new wallet
+		<div className="flex flex-col gap-4 justify-between items-center border border-border rounded-xl p-4 bg-background-lighter cursor-pointer">
+			<div className="flex flex-row gap-2 justify-between items-center w-full">
+				<div className="text-muted-foreground">Wallet balance</div>
+				<BetValue value={balance} withIcon withMillify className="font-semibold" />
+			</div>
+			<div className="flex flex-row gap-2 justify-between items-center w-full">
+				<div className="text-muted-foreground">Available balance</div>
+				<BetValue value={allowance} withIcon withMillify className="font-semibold" />
+			</div>
+			<div className="flex flex-row items-end justify-end w-full">
+				<Button className="gap-2" variant="outline">
+					<ArrowLeftRightIcon className="size-4" />
+					Adjust spending limit
 				</Button>
-			</DialogTrigger>
-			<DialogContent className="p-4 min-w-100 select-none">
-				<DialogHeader>
-					<DialogTitle className="text-center text-lg">Add wallet</DialogTitle>
-				</DialogHeader>
-				<AnimatePresence mode="sync">
-					{!importing ? (
-						<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="grid grid-cols-2 gap-2 text-sm">
-							<motion.div
-								onClick={handleCreateWallet}
-								whileHover={{ scale: 1.03 }}
-								whileTap={{ scale: 0.97 }}
-								className="flex flex-col border border-border cursor-pointer  p-4 rounded-lg gap-2 items-center"
-							>
-								{loading ? <LoaderIcon className="w-10 h-10 animate-spin" /> : <PlusIcon className="w-10 h-10" />}
-								<div>Add a new Polygon wallet</div>
-							</motion.div>
-							<motion.div
-								whileHover={{ scale: 1.03 }}
-								whileTap={{ scale: 0.97 }}
-								onClick={() => setImporting(true)}
-								className="flex flex-col border border-border cursor-pointer  p-4 rounded-lg gap-2 items-center"
-							>
-								<ImportIcon className="w-10 h-10" />
-								<div>Import existing wallet</div>
-							</motion.div>
-						</motion.div>
-					) : (
-						<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-							<Button onClick={() => setImporting(false)} variant="ghost">
-								<ArrowLeftIcon className="w-4 h-4" />
-								Back
-							</Button>
+			</div>
+		</div>
+	);
+}
+function ProfileLink() {
+	const { address = ZeroAddress } = useAccount();
 
-							<textarea
-								name="privateKey"
-								id="privateKey"
-								value={privateKey}
-								onChange={(e) => setPrivateKey(e.target.value)}
-								className="w-full h-40 border border-border rounded-lg p-2"
-							/>
-							<div className="flex flex-col gap-2">
-								<Button variant="outline">Cancel</Button>
-								<Button onClick={handleImportWallet}>Import wallet</Button>
-							</div>
-						</motion.div>
-					)}
-				</AnimatePresence>
-			</DialogContent>
-		</Dialog>
+	return (
+		<Link to="/profile">
+			<motion.div
+				whileTap={{ scale: 0.97 }}
+				className="flex flex-row gap-2 justify-between items-center border border-border rounded-xl p-4 bg-background-lighter cursor-pointer"
+			>
+				<div className="flex flex-row gap-2 items-center">
+					<div className="rounded-full border border-success p-1">
+						<BetLogo className="size-6" />
+					</div>
+					<div className="flex flex-col">
+						<div className="font-semibold text-lg leading-5">My Profile</div>
+						<div className="text-xs text-muted-foreground">{truncateEthAddress(address)}</div>
+					</div>
+				</div>
+				<div className="bg-white/20 rounded-lg p-1">
+					<ChevronRightIcon className="size-5" />
+				</div>
+			</motion.div>
+		</Link>
 	);
 }
 
