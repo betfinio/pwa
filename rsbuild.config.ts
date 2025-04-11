@@ -2,11 +2,9 @@ import { defineConfig } from '@rsbuild/core';
 import { pluginReact } from '@rsbuild/plugin-react';
 
 export default defineConfig({
-  plugins: [
-    pluginReact(),
-  ],
+  plugins: [pluginReact()],
   server: {
-    port: 4444
+    port: 4444,
   },
   html: {
     title: 'Betfin Wallet',
@@ -15,12 +13,12 @@ export default defineConfig({
         tag: 'link',
         attrs: {
           rel: 'manifest',
-          href: 'manifest.json'
+          href: 'manifest.json',
         },
         head: true,
         publicPath: true,
-        hash: false
-      }
-    ]
+        hash: false,
+      },
+    ],
   },
 });

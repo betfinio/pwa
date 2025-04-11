@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-import { mfQueryClient } from '../config/query';
 import {
   Select,
   SelectContent,
@@ -8,6 +6,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@betfinio/components/ui';
+import { useEffect, useState } from 'react';
+import { mfQueryClient } from '../config/query';
 import { useProviders } from '../lib/query';
 
 function Switcher() {

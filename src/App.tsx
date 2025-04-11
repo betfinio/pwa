@@ -1,41 +1,45 @@
-import { RouterProvider } from '@tanstack/react-router';
-import router from './router';
-import { mfQueryClient } from './config/query';
+import { PrivyProvider } from '@privy-io/react-auth';
 import { WagmiProvider } from '@privy-io/wagmi';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { PrivyProvider } from '@privy-io/react-auth';
-import { PRIVY_APP_ID } from './globals';
-import { privyConfig } from './config/privy';
+import { RouterProvider } from '@tanstack/react-router';
 import { I18nextProvider } from 'react-i18next';
+import { privyConfig } from './config/privy';
+import { mfQueryClient } from './config/query';
+import { PRIVY_APP_ID } from './globals';
 import instance from './i18n';
+import { useLoadRemoteModule } from './lib/query/mf';
+import router from './router';
 import type {
   ContextConfigModule,
   ContextContextModule,
   RemoteModule,
 } from './types';
-import { useLoadRemoteModule } from './lib/query/mf';
 
-const MODULE: RemoteModule = 'betfinio_context';
+const CONTEXT_MODULE: RemoteModule = 'betfinio_context';
 
 function App() {
-  useLoadRemoteModule(mfQueryClient, MODULE, 'style');
+  // Load remote modules from betfinio_context
+  useLoadRemoteModule(mfQueryClient, CONTEXT_MODULE, 'style');
+
   const config = useLoadRemoteModule<ContextConfigModule>(
     mfQueryClient,
-    MODULE,
+    CONTEXT_MODULE,
     'config',
   );
-  const data = useLoadRemoteModule<ContextContextModule>(
+
+  const contextModule = useLoadRemoteModule<ContextContextModule>(
     mfQueryClient,
-    MODULE,
+    CONTEXT_MODULE,
     'lib/context',
   );
 
-  if (!config || !data) {
+  // Return null while modules are loading
+  if (!config || !contextModule) {
     return null;
   }
 
-  const GlobalContextProvider = data.GlobalContextProvider;
-  console.log('rendering app');
+  const { GlobalContextProvider } = contextModule;
+
   return (
     <I18nextProvider i18n={instance}>
       <GlobalContextProvider>

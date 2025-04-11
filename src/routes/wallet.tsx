@@ -12,10 +12,10 @@ import {
   usePrivy,
   useWallets,
 } from '@privy-io/react-auth';
-import { ArrowLeftIcon, ImportIcon, LoaderIcon, PlusIcon } from 'lucide-react';
-import SingleWallet from '../components/wallet/SingleWallet';
 import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowLeftIcon, ImportIcon, LoaderIcon, PlusIcon } from 'lucide-react';
 import { useState } from 'react';
+import SingleWallet from '../components/wallet/SingleWallet';
 function WalletPage() {
   const { wallets } = useWallets();
   const { ready, connectOrCreateWallet, logout } = usePrivy();

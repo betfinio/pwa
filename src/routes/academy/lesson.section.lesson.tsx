@@ -1,7 +1,7 @@
-import { I18nextProvider } from 'react-i18next';
 import { mfQueryClient } from '@/src/config/query';
 import { useLoadRemoteModule } from '@/src/lib/query/mf';
 import type { AcademyModule, I18nModule, RemoteModule } from '@/src/types';
+import { I18nextProvider } from 'react-i18next';
 
 const MODULE: RemoteModule = 'betfinio_academy';
 

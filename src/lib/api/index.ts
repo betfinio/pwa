@@ -1,4 +1,4 @@
-import logger from "@/src/config/logger";
+import logger from '@/src/config/logger';
 
 export const getProviders = async () => {
   logger.info('fetching local providers');
@@ -15,4 +15,4 @@ export const getProviders = async () => {
     logger.info('fetched remote providers');
     return data.json();
   }
-}
+};

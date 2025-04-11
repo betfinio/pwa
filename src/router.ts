@@ -5,7 +5,7 @@ import {
   lazyRouteComponent,
   redirect,
 } from '@tanstack/react-router';
-import { loadRemoteModule } from './lib/api/mf';
+
 import Index from './routes';
 import Root from './routes/root';
 import Wallet from './routes/wallet';
@@ -232,10 +232,10 @@ const createAcademyRoute = createRoute({
   component: lazyRouteComponent(() => import('./routes/academy/lesson.create')),
 });
 
-const homeRoute = createRoute({
+const appRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/home',
-  component: lazyRouteComponent(() => import('./routes/home')),
+  path: '/app',
+  component: lazyRouteComponent(() => import('./routes/app')),
 });
 
 rootRoute.addChildren([
@@ -270,7 +270,7 @@ rootRoute.addChildren([
   eventsAcademyRoute,
   documentsAcademyRoute,
   createAcademyRoute,
-  homeRoute,
+  appRoute,
 ]);
 const router = createRouter({
   routeTree: rootRoute,

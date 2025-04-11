@@ -1,38 +1,40 @@
 import { init } from '@module-federation/enhanced/runtime';
+import * as ReactRouter from '@tanstack/react-router';
 import i18next from 'i18next';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as ReactI18Next from 'react-i18next';
-import * as ReactRouter from '@tanstack/react-router';
+
 init({
   name: 'betfin_pwa',
   remotes: [],
+  shareStrategy: 'loaded-first',
   shared: {
-    'react': {
-      version: '18.3.1',
+    react: {
+      version: '19.1.0',
       scope: 'default',
       lib: () => React,
       shareConfig: {
         singleton: true,
-        requiredVersion: '18.3.1',
+        requiredVersion: '19.1.0',
       },
     },
     'react-dom': {
-      version: '18.3.1',
+      version: '19.1.0',
       scope: 'default',
       lib: () => ReactDOM,
       shareConfig: {
         singleton: true,
-        requiredVersion: '18.3.1',
+        requiredVersion: '19.1.0',
       },
     },
-    'i18next': {
-      version: '24.2.2',
+    i18next: {
+      version: '24.2.3',
       scope: 'default',
       lib: () => i18next,
       shareConfig: {
         singleton: true,
-        requiredVersion: '24.2.2',
+        requiredVersion: '24.2.3',
       },
     },
     'react-i18next': {
@@ -45,7 +47,7 @@ init({
       },
     },
     '@tanstack/react-query': {
-      version: '5.66.9',
+      version: '5.66.10',
       scope: 'default',
       shareConfig: {
         singleton: true,
@@ -53,20 +55,20 @@ init({
       },
     },
     '@tanstack/react-router': {
-      version: '1.111.11',
+      version: '1.115.2',
       scope: 'default',
       lib: () => ReactRouter,
       shareConfig: {
         singleton: true,
-        requiredVersion: '1.111.11',
+        requiredVersion: '1.115.2',
       },
     },
-    'wagmi': {
-      version: '2.14.12',
+    wagmi: {
+      version: '2.14.16',
       scope: 'default',
       shareConfig: {
         singleton: true,
-        requiredVersion: '2.14.12',
+        requiredVersion: '2.14.16',
       },
     },
     '@privy-io/wagmi': {
@@ -78,16 +80,22 @@ init({
       },
     },
     '@privy-io/react-auth': {
-      version: '2.4.5',
+      version: '2.8.3',
       scope: 'default',
       shareConfig: {
         singleton: true,
-        requiredVersion: '2.4.5',
+        requiredVersion: '2.8.3',
+      },
+    },
+    '@betfinio/components': {
+      version: '2.1.4',
+      scope: 'default',
+      shareConfig: {
+        singleton: true,
+        requiredVersion: '2.1.4',
       },
     },
   },
-})
+});
 
-
-import('./bootstrap')
-
+import('./bootstrap');

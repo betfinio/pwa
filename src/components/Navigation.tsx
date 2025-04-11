@@ -9,7 +9,7 @@ import {
 
 function Navigation() {
   return (
-    <nav className="grid grid-cols-5 fixed w-screen bottom-0 left-0 border-t border-border p-2 pt-3 bg-background h-16 z-[10]">
+    <nav className="grid grid-cols-5 fixed w-screen bottom-0 left-0 border-t border-border p-2 pt-3 bg-background h-16 z-10">
       <Link
         to="/home"
         className="flex flex-col items-center justify-center text-xs"

@@ -1,8 +1,8 @@
+import { mfQueryClient } from '@/src/config/query';
+import { useLoadRemoteModule } from '@/src/lib/query/mf';
+import type { I18nModule, RemoteModule } from '@/src/types';
 import { Outlet } from '@tanstack/react-router';
 import { I18nextProvider } from 'react-i18next';
-import type { I18nModule, RemoteModule } from '@/src/types';
-import { useLoadRemoteModule } from '@/src/lib/query/mf';
-import { mfQueryClient } from '@/src/config/query';
 
 const MODULE: RemoteModule = 'betfinio_roulette';
 function RouletteLayout() {

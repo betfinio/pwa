@@ -1,24 +1,33 @@
-import type { i18n } from "i18next";
-import type { QueryClient } from "@tanstack/react-query";
-import type { PropsWithChildren } from "react";
-import type { Config } from "wagmi";
+import type { QueryClient } from '@tanstack/react-query';
+import type { i18n } from 'i18next';
+import type { PropsWithChildren } from 'react';
+import type { Config } from 'wagmi';
 
 export interface BetfinProvider {
   key: string;
   url: string;
 }
 
-
 export interface Manifest {
   context: string;
   remotes: Record<string, string>;
   sidebar: Record<string, boolean>;
 }
-export type RemoteModule = 'betfinio_context' | 'betfinio_staking' | 'betfinio_roulette' | 'betfinio_affiliate' | 'betfinio_statistics' | 'betfinio_lottery' | "betfinio_predict" | 'betfinio_luro' | 'betfinio_stones' | 'betfinio_academy'
+export type RemoteModule =
+  | 'betfinio_context'
+  | 'betfinio_staking'
+  | 'betfinio_roulette'
+  | 'betfinio_affiliate'
+  | 'betfinio_statistics'
+  | 'betfinio_lottery'
+  | 'betfinio_predict'
+  | 'betfinio_luro'
+  | 'betfinio_stones'
+  | 'betfinio_academy';
 
 // common modules
 export interface I18nModule {
-  default: i18n
+  default: i18n;
 }
 
 // context modules
@@ -28,13 +37,10 @@ export interface ContextConfigModule {
   queryClient: QueryClient;
 }
 
-
 export interface ContextContextModule {
   GlobalContextProvider: React.ComponentType<PropsWithChildren>;
   AllowanceProvider: React.ComponentType<PropsWithChildren>;
 }
-
-
 
 // roulette modules
 
@@ -93,7 +99,6 @@ export interface LotteryModule {
   HistoryRoundPage: React.ComponentType;
 }
 
-
 // statistics modules
 
 export interface StatisticsModule {
@@ -111,4 +116,3 @@ export interface AcademyModule {
   DocsPage: React.ComponentType;
   CreatePage: React.ComponentType;
 }
-

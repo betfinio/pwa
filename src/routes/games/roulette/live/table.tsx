@@ -1,8 +1,6 @@
 import { mfQueryClient } from '@/src/config/query';
 import { useLoadRemoteModule } from '@/src/lib/query/mf';
-import type {
-  RouletteLiveTableModule,
-} from '@/src/types';
+import type { RouletteLiveTableModule } from '@/src/types';
 
 const MODULE = 'betfinio_roulette';
 
