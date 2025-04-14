@@ -86,7 +86,7 @@ function SendAction() {
 					<DrawerTitle>Send</DrawerTitle>
 				</DrawerHeader>
 				<DrawerDescription className="hidden" />
-				<div className="flex flex-col gap-2 p-4">
+				<div className="flex flex-col gap-2 p-4 min-h-[30vh]">
 					<AnimatePresence mode="popLayout">
 						<motion.div className="flex flex-col gap-2" key="recipient">
 							<div className="flex flex-col gap-2">

@@ -1,5 +1,3 @@
-import { RefreshCcwIcon, SendIcon, UploadIcon, WalletIcon } from 'lucide-react';
-import { motion } from 'motion/react';
 import BuyAction from './BuyAction';
 import ReceiveAction from './ReceiveAction';
 import SendAction from './SendAction';
