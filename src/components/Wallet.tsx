@@ -35,7 +35,8 @@ function Wallet() {
 		if (!loaded) return;
 		if (address === ZeroAddress) return;
 		if (address.toLowerCase() !== storedAddress?.toLowerCase()) {
-			window.location.reload();
+			// window.location.reload();
+			// todo cause infinite reloading in some cases
 		}
 	}, [address, storedAddress, loaded]);
 
