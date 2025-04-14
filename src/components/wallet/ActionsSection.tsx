@@ -1,6 +1,7 @@
-import { RefreshCcwIcon, UploadIcon, WalletIcon } from 'lucide-react';
+import { RefreshCcwIcon, SendIcon, UploadIcon, WalletIcon } from 'lucide-react';
 import { motion } from 'motion/react';
 import ReceiveAction from './ReceiveAction';
+import SendAction from './SendAction';
 
 function ActionsSection() {
 	return (
@@ -17,12 +18,7 @@ function ActionsSection() {
 				</motion.div>
 				<div className="text-sm">Swap</div>
 			</div>
-			<div className="flex flex-col items-center gap-2 w-full">
-				<motion.div whileTap={{ scale: 0.95 }} className="border border-border rounded-xl p-4 bg-background-lighter cursor-pointer">
-					<UploadIcon className="size-6 text-primary" />
-				</motion.div>
-				<div className="text-sm">Send</div>
-			</div>
+			<SendAction />
 			<ReceiveAction />
 		</div>
 	);

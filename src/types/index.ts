@@ -66,6 +66,9 @@ export interface ContextApiModule {
 	increaseAllowance: (config: Config) => Promise<WriteContractReturnType>;
 	mint: (address: Address, inviter: Address, parent: Address, config: Config) => Promise<WriteContractReturnType>;
 }
+export interface ContextGlobalsModule {
+	TOKEN_ADDRESS: Address;
+}
 export interface ContextUtilsModule {
 	validateRef: (search: Record<string, unknown>) => Record<string, unknown>;
 	handleCodeMint: (code: InviteCode, address: Address) => Promise<MintResult>;
