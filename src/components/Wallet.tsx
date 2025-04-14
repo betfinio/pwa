@@ -10,8 +10,15 @@ function Wallet() {
 	const { address = ZeroAddress } = useAccount();
 	const { wallets, ready } = useWallets();
 	const { setActiveWallet } = useSetActiveWallet();
-	const { data: storedAddress } = useStoredAddress();
+	const { data: storedAddress, updateAddress } = useStoredAddress();
 	const [loaded, setLoaded] = useState(false);
+
+	useEffect(() => {
+		if (address === ZeroAddress) return;
+		if (storedAddress === ZeroAddress) {
+			updateAddress(address);
+		}
+	}, [address, storedAddress]);
 
 	useEffect(() => {
 		if (!ready) return;
@@ -24,7 +31,13 @@ function Wallet() {
 		}, 500);
 	}, [ready, storedAddress, wallets]);
 
-	if (!loaded) return;
+	useEffect(() => {
+		if (!loaded) return;
+		if (address === ZeroAddress) return;
+		if (address.toLowerCase() !== storedAddress?.toLowerCase()) {
+			window.location.reload();
+		}
+	}, [address, storedAddress, loaded]);
 
 	return (
 		<Link to="/wallet">
