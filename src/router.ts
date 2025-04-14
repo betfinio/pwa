@@ -1,6 +1,5 @@
 import { createRootRoute, createRoute, createRouter, lazyRouteComponent, redirect } from '@tanstack/react-router';
 
-import Index from './routes';
 import Root from './routes/root';
 import Wallet from './routes/wallet';
 
@@ -11,7 +10,9 @@ const rootRoute = createRootRoute({
 const indexRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: '/',
-	component: Index,
+	beforeLoad: async () => {
+		throw redirect({ to: '/app' });
+	},
 });
 const walletRoute = createRoute({
 	getParentRoute: () => rootRoute,

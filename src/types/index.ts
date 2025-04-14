@@ -25,7 +25,8 @@ export type RemoteModule =
 	| 'betfinio_predict'
 	| 'betfinio_luro'
 	| 'betfinio_stones'
-	| 'betfinio_academy';
+	| 'betfinio_academy'
+	| 'betfinio_app';
 
 // common modules
 export interface I18nModule {
@@ -36,6 +37,11 @@ export interface ContextTranslationsModule {
 	sharedLang: {
 		[key: string]: any;
 	};
+}
+
+// app modules
+export interface AppModule {
+	default: React.ComponentType;
 }
 
 // context modules

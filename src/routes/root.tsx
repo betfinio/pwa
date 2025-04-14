@@ -20,12 +20,10 @@ function Root() {
 	return (
 		<SidebarProvider defaultOpen className="flex flex-row max-w-(--breakpoint-2xl) mx-auto relative overflow-x-hidden">
 			<CustomSidebar />
-			<div className="flex flex-col flex-1">
-				<Header />
-				<main className="pb-16">
-					<Outlet />
-				</main>
-			</div>
+			<Header />
+			<main className="py-16 flex flex-col flex-1">
+				<Outlet />
+			</main>
 			<Navigation />
 		</SidebarProvider>
 	);

@@ -11,7 +11,7 @@ function Navigation() {
 				<MenuIcon className="w-6 h-6" />
 				Menu
 			</div>
-			<Link to="/games/roulette" className="flex flex-col items-center justify-center text-xs">
+			<Link to="/app" className="flex flex-col items-center justify-center text-xs">
 				<Gamepad2Icon className="w-6 h-6" />
 				Lobby
 			</Link>
