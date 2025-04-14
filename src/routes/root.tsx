@@ -22,7 +22,7 @@ function Root() {
 			<CustomSidebar />
 			<div className="flex flex-col flex-1">
 				<Header />
-				<main>
+				<main className="pb-16">
 					<Outlet />
 				</main>
 			</div>
