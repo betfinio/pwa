@@ -1,3 +1,4 @@
+import { useStoredAddress } from '@/src/lib/query/wallet';
 import { truncateEthAddress } from '@betfinio/abi';
 import { BetLogo } from '@betfinio/components/icons';
 import { Badge, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, toast } from '@betfinio/components/ui';
@@ -15,6 +16,7 @@ function SingleWallet({ wallet, onClose }: { wallet: Address; onClose: () => voi
 	const { address } = useAccount();
 	const { wallets } = useWallets();
 	const [connectedWallet, setConnectedWallet] = useState<ConnectedWallet | null>(null);
+	const { updateAddress } = useStoredAddress();
 
 	useEffect(() => {
 		const connectedWallet = wallets.find((w) => w.address === wallet);
@@ -30,6 +32,7 @@ function SingleWallet({ wallet, onClose }: { wallet: Address; onClose: () => voi
 		e.stopPropagation();
 		if (connectedWallet) {
 			await setActiveWallet(connectedWallet);
+			updateAddress(wallet);
 			onClose();
 		}
 	};

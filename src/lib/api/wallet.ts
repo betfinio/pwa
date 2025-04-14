@@ -1,5 +1,6 @@
 import logger from '@/src/config/logger';
 import type { ContextGlobalsModule } from '@/src/types';
+import { ZeroAddress } from '@betfinio/abi';
 import { estimateFeesPerGas, estimateGas, getGasPrice, sendTransaction, simulateContract, writeContract } from '@wagmi/core';
 import { type Address, erc20Abi, parseEther, parseGwei } from 'viem';
 import type { Config } from 'wagmi';
@@ -33,4 +34,13 @@ export const sendNative = async (to: Address, amount: bigint, isMax: boolean, co
 	});
 	logger.success('sent', { tx });
 	return tx;
+};
+
+export const getStoredAddress = async (): Promise<Address> => {
+	// load from localstorage
+	const storedAddress = localStorage.getItem('storedAddress');
+	if (storedAddress) {
+		return storedAddress as Address;
+	}
+	return ZeroAddress;
 };

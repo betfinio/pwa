@@ -1,11 +1,12 @@
 import logger from '@/src/config/logger';
 import { mfQueryClient } from '@/src/config/query';
+import { ZeroAddress } from '@betfinio/abi';
 import { toast } from '@betfinio/components/ui';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { waitForTransactionReceipt } from '@wagmi/core';
 import type { Address } from 'viem';
-import { useConfig } from 'wagmi';
-import { sendERC20, sendNative } from '../api/wallet';
+import { useAccount, useConfig } from 'wagmi';
+import { getStoredAddress, sendERC20, sendNative } from '../api/wallet';
 
 export const useSendERC20 = () => {
 	const config = useConfig();
@@ -48,4 +49,17 @@ export const useSendNative = () => {
 			});
 		},
 	});
+};
+
+export const useStoredAddress = () => {
+	const query = useQuery<Address>({
+		queryKey: ['storedAddress'],
+		queryFn: () => getStoredAddress(),
+		initialData: (localStorage.getItem('storedAddress') as Address) ?? ZeroAddress,
+	});
+	const updateAddress = (addr: Address) => {
+		localStorage.setItem('storedAddress', addr);
+		query.refetch();
+	};
+	return { ...query, updateAddress };
 };
