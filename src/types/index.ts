@@ -10,6 +10,7 @@ export interface BetfinProvider {
 }
 
 export interface Manifest {
+	environment: 'development' | 'production';
 	context: string;
 	remotes: Record<string, string>;
 	sidebar: Record<string, boolean>;

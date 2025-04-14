@@ -4,10 +4,15 @@ import { useSetActiveWallet } from '@privy-io/wagmi';
 import { Link } from '@tanstack/react-router';
 import { UserCircleIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { polygon, polygonAmoy } from 'viem/chains';
 import { useAccount } from 'wagmi';
+import { mfQueryClient } from '../config/query';
+import { useContextManifest } from '../lib/query/mf';
 import { useStoredAddress } from '../lib/query/wallet';
+
 function Wallet() {
 	const { address = ZeroAddress } = useAccount();
+	const { data: manifest } = useContextManifest(mfQueryClient);
 	const { wallets, ready } = useWallets();
 	const { setActiveWallet } = useSetActiveWallet();
 	const { data: storedAddress, updateAddress } = useStoredAddress();
@@ -30,6 +35,16 @@ function Wallet() {
 			}
 		}, 500);
 	}, [ready, storedAddress, wallets]);
+
+	useEffect(() => {
+		if (!manifest) return;
+		if (!ready) return;
+		if (address === ZeroAddress) return;
+		const wallet = wallets.find((w) => w.address === address);
+		if (wallet) {
+			wallet.switchChain(manifest.environment === 'production' ? polygon.id : polygonAmoy.id);
+		}
+	}, [manifest, ready, wallets, address]);
 
 	useEffect(() => {
 		if (!loaded) return;
