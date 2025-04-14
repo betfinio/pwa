@@ -1,3 +1,4 @@
+import Loading from '@/src/components/pages/Loading';
 import { mfQueryClient } from '@/src/config/query';
 import { useLoadRemoteModule } from '@/src/lib/query/mf';
 import type { I18nModule, RemoteModule } from '@/src/types';
@@ -8,7 +9,7 @@ const MODULE: RemoteModule = 'betfinio_roulette';
 function RouletteLayout() {
 	useLoadRemoteModule(mfQueryClient, MODULE, 'style');
 	const instance = useLoadRemoteModule<I18nModule>(mfQueryClient, MODULE, 'i18n');
-	if (!instance) return null;
+	if (!instance) return <Loading />;
 	return (
 		<I18nextProvider i18n={instance.default}>
 			<Outlet />

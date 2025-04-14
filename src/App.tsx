@@ -5,6 +5,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
 import { useEffect } from 'react';
 import { I18nextProvider } from 'react-i18next';
+import Loading from './components/pages/Loading';
 import { privyConfig } from './config/privy';
 import { mfQueryClient } from './config/query';
 import { PRIVY_APP_ID } from './globals';
@@ -46,7 +47,7 @@ function App() {
 				<PrivyProvider appId={PRIVY_APP_ID} config={privyConfig}>
 					<QueryClientProvider client={config.queryClient}>
 						<WagmiProvider config={config.wagmiConfig}>
-							<RouterProvider router={router} />
+							<RouterProvider router={router} defaultPendingComponent={Loading} />
 							<SonnerToaster />
 						</WagmiProvider>
 					</QueryClientProvider>

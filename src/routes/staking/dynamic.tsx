@@ -1,3 +1,4 @@
+import Loading from '@/src/components/pages/Loading';
 import { mfQueryClient } from '@/src/config/query';
 import { useLoadRemoteModule } from '@/src/lib/query/mf';
 import type { I18nModule, RemoteModule, StakingDynamicModule } from '@/src/types';
@@ -9,7 +10,7 @@ function DynamicStaking() {
 	useLoadRemoteModule(mfQueryClient, MODULE, 'style');
 	const staking = useLoadRemoteModule<StakingDynamicModule>(mfQueryClient, MODULE, 'dynamic');
 	const instance = useLoadRemoteModule<I18nModule>(mfQueryClient, MODULE, 'i18n');
-	if (!staking || !instance) return null;
+	if (!staking || !instance) return <Loading />;
 
 	const Component = staking.DynamicStakingPage;
 

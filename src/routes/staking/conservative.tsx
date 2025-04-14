@@ -1,3 +1,4 @@
+import Loading from '@/src/components/pages/Loading';
 import { mfQueryClient } from '@/src/config/query';
 import { useLoadRemoteModule } from '@/src/lib/query/mf';
 import type { I18nModule, RemoteModule, StakingConservativeModule } from '@/src/types';
@@ -11,7 +12,7 @@ function ConservativeStaking() {
 
 	const instance = useLoadRemoteModule<I18nModule>(mfQueryClient, MODULE, 'i18n');
 
-	if (!staking || !instance) return null;
+	if (!staking || !instance) return <Loading />;
 
 	const Component = staking.ConservativeStakingPage;
 

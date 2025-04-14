@@ -1,3 +1,4 @@
+import Loading from '@/src/components/pages/Loading';
 import { mfQueryClient } from '@/src/config/query';
 import { useLoadRemoteModule } from '@/src/lib/query/mf';
 import type { I18nModule, RemoteModule, StatisticsModule } from '@/src/types';
@@ -11,7 +12,7 @@ function StatisticsPage() {
 
 	const instance = useLoadRemoteModule<I18nModule>(mfQueryClient, MODULE, 'i18n');
 
-	if (!statistics || !instance) return null;
+	if (!statistics || !instance) return <Loading />;
 
 	const Component = statistics.StatisticsPage;
 

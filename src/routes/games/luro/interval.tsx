@@ -1,3 +1,4 @@
+import Loading from '@/src/components/pages/Loading';
 import { mfQueryClient } from '@/src/config/query';
 import { useLoadRemoteModule } from '@/src/lib/query/mf';
 import type { I18nModule, LuroModule, RemoteModule } from '@/src/types';
@@ -11,7 +12,7 @@ function LuroInterval() {
 
 	const instance = useLoadRemoteModule<I18nModule>(mfQueryClient, MODULE, 'i18n');
 
-	if (!luro || !instance) return null;
+	if (!luro || !instance) return <Loading />;
 
 	const Component = luro.LuroPage;
 

@@ -21,7 +21,7 @@ import {
 	Input,
 	toast,
 } from '@betfinio/components/ui';
-import { useImportWallet, useLogout, usePrivy, useWallets } from '@privy-io/react-auth';
+import { useCreateWallet, useImportWallet, useLogout, usePrivy, useWallets } from '@privy-io/react-auth';
 import { useSetActiveWallet } from '@privy-io/wagmi';
 import { Link } from '@tanstack/react-router';
 import {
@@ -39,7 +39,7 @@ import {
 	WalletIcon,
 } from 'lucide-react';
 import { motion } from 'motion/react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Address } from 'viem';
 import { useAccount } from 'wagmi';
 import { useBalance as usePolBalance } from 'wagmi';
@@ -79,7 +79,7 @@ function WalletPage() {
 				<div className="text-muted-foreground">Are you existing user?</div>
 				<ImportWalletDrawer />
 				<div className="text-muted-foreground">Are you new user?</div>
-				<CreateWalletDrawer />
+				<CreateWalletDrawer onClose={() => {}} />
 				<LogoutDialog />
 			</div>
 		);
@@ -134,29 +134,56 @@ function MemberWarning() {
 	);
 }
 
-function CreateWalletDrawer() {
-	const { createWallet } = usePrivy();
+function CreateWalletDrawer({ onClose }: { onClose: () => void }) {
+	const [open, setOpen] = useState(false);
+	const [loading, setLoading] = useState(false);
+	const { createWallet } = useCreateWallet();
+	const { wallets } = useWallets();
+	const [newWallet, setNewWallet] = useState<Address | null>(null);
+	const { setActiveWallet } = useSetActiveWallet();
+
+	useEffect(() => {
+		if (newWallet) {
+			setOpen(false);
+			onClose();
+			toast.success('Wallet created successfully');
+			const wallet = wallets.find((wallet) => wallet.address === newWallet);
+			if (wallet) {
+				setActiveWallet(wallet);
+			}
+		}
+	}, [wallets, newWallet]);
 
 	const handleCreateWallet = async () => {
-		// await createWallet();
+		setLoading(true);
+		const wallet = await createWallet({ createAdditional: true });
+		setNewWallet(wallet.address as Address);
+		setLoading(false);
 	};
 
 	return (
-		<Drawer>
-			<DrawerTrigger asChild>
+		<Dialog open={open} onOpenChange={setOpen}>
+			<DialogTrigger asChild>
 				<Button variant="outline" className="border-white/50 gap-2">
 					<PlusIcon className="size-4" />
 					Create new wallet
 				</Button>
-			</DrawerTrigger>
-			<DrawerContent>
-				<DrawerHeader>
-					<DrawerTitle>Create new wallet</DrawerTitle>
-				</DrawerHeader>
-				<DrawerDescription className="hidden" />
-				<div className="flex flex-col gap-2 p-4">Not supported yet</div>
-			</DrawerContent>
-		</Drawer>
+			</DialogTrigger>
+			<DialogContent className="w-[90vw] p-4">
+				<DialogHeader className="text-center">
+					<DialogTitle>Create new wallet</DialogTitle>
+				</DialogHeader>
+				<DialogDescription className="hidden" />
+				<div className="flex flex-col gap-2 justify-between w-full">
+					<h3 className="text-sm ">Are you sure you want to create a new wallet?</h3>
+					<motion.div whileTap={{ scale: 0.97 }} className="flex flex-col gap-2">
+						<Button className="w-full rounded-xl" onClick={handleCreateWallet} disabled={loading}>
+							{loading ? <LoaderIcon className="size-4 animate-spin" /> : 'Create a new wallet'}
+						</Button>
+					</motion.div>
+				</div>
+			</DialogContent>
+		</Dialog>
 	);
 }
 
@@ -222,7 +249,7 @@ function ChangeWalletDrawer() {
 				<div className="min-h-[50vh] flex flex-col justify-between  p-4">
 					<div className="flex flex-col gap-2">
 						{wallets.map((wallet) => (
-							<SingleWallet key={wallet.address} wallet={wallet} onClose={() => setOpen(false)} />
+							<SingleWallet key={wallet.address} wallet={wallet.address as Address} onClose={() => setOpen(false)} />
 						))}
 					</div>
 					<AddWalletDrawer />
@@ -233,8 +260,12 @@ function ChangeWalletDrawer() {
 }
 
 function AddWalletDrawer() {
+	const [open, setOpen] = useState(false);
+	const handleClose = () => {
+		setOpen(false);
+	};
 	return (
-		<Drawer>
+		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
 				<motion.div whileTap={{ scale: 0.97 }}>
 					<Button variant="outline" className="w-full border-primary gap-2">
@@ -249,12 +280,7 @@ function AddWalletDrawer() {
 				</DrawerHeader>
 				<DrawerDescription className="hidden" />
 				<div className="flex flex-col gap-2 p-4">
-					<motion.div whileTap={{ scale: 0.97 }}>
-						<Button variant="outline" className="w-full border-white/50 gap-2">
-							<PlusIcon className="size-4" />
-							Add a new Polygon wallet
-						</Button>
-					</motion.div>
+					<CreateWalletDrawer onClose={handleClose} />
 					<ImportWalletDrawer />
 				</div>
 			</DrawerContent>

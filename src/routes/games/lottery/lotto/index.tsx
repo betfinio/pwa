@@ -1,3 +1,4 @@
+import Loading from '@/src/components/pages/Loading';
 import { mfQueryClient } from '@/src/config/query';
 import { useLoadRemoteModule } from '@/src/lib/query/mf';
 import type { I18nModule, LotteryModule, RemoteModule } from '@/src/types';
@@ -10,7 +11,7 @@ function LotteryIndex() {
 	const lottery = useLoadRemoteModule<LotteryModule>(mfQueryClient, MODULE, 'routes/index');
 
 	const instance = useLoadRemoteModule<I18nModule>(mfQueryClient, MODULE, 'i18n');
-	if (!lottery || !instance) return null;
+	if (!lottery || !instance) return <Loading />;
 
 	const Component = lottery.LotteryPage;
 
