@@ -5,7 +5,7 @@ import { toast } from '@betfinio/components/ui';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { waitForTransactionReceipt } from '@wagmi/core';
 import type { Address } from 'viem';
-import { useAccount, useConfig } from 'wagmi';
+import { useConfig } from 'wagmi';
 import { getStoredAddress, sendERC20, sendNative } from '../api/wallet';
 
 export const useSendERC20 = () => {

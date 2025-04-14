@@ -1,6 +1,6 @@
 import logger from '@/src/config/logger';
 import type { Manifest, RemoteModule } from '@/src/types';
-import { loadRemote, loadShare, registerRemotes } from '@module-federation/enhanced/runtime';
+import { loadRemote, registerRemotes } from '@module-federation/enhanced/runtime';
 
 export async function getManifest(): Promise<Manifest | null> {
 	// read manifest variable from local storage

@@ -1,8 +1,8 @@
 import logger from '@/src/config/logger';
 import type { ContextGlobalsModule } from '@/src/types';
 import { ZeroAddress } from '@betfinio/abi';
-import { estimateFeesPerGas, estimateGas, getGasPrice, sendTransaction, simulateContract, writeContract } from '@wagmi/core';
-import { type Address, erc20Abi, parseEther, parseGwei } from 'viem';
+import { sendTransaction, simulateContract, writeContract } from '@wagmi/core';
+import { type Address, erc20Abi, parseEther } from 'viem';
 import type { Config } from 'wagmi';
 import { loadRemoteModule } from './mf';
 

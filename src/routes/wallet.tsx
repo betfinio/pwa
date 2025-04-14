@@ -1,7 +1,7 @@
 import { BetLogo } from '@betfinio/components/icons';
 
 import { Button } from '@betfinio/components/ui';
-import { usePrivy, useWallets } from '@privy-io/react-auth';
+import { usePrivy, useSignupWithPasskey, useWallets } from '@privy-io/react-auth';
 import { LoaderIcon } from 'lucide-react';
 import ActionsSection from '../components/wallet/ActionsSection';
 import BalanceSection from '../components/wallet/BalanceSection';
@@ -10,6 +10,7 @@ import CreateWalletDrawer from '../components/wallet/CreateWalletDrawer';
 import ImportWalletDrawer from '../components/wallet/ImportWalletDrawer';
 import LogoutDialog from '../components/wallet/LogoutDialog';
 import ProfileLink from '../components/wallet/ProfileLink';
+import SecuritySection from '../components/wallet/SecuritySection';
 
 function WalletPage() {
 	const { wallets, ready: walletsReady } = useWallets();
@@ -54,6 +55,7 @@ function WalletPage() {
 			<ProfileLink />
 			<BalanceSection />
 			<ActionsSection />
+			<SecuritySection />
 			<AuthSection />
 		</div>
 	);

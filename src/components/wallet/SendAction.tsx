@@ -13,7 +13,7 @@ import { DrawerHeader } from '@betfinio/components/ui';
 import { LoaderIcon, SendIcon } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useMemo, useState } from 'react';
-import { type Address, formatEther, isAddress, parseEther, weiUnits } from 'viem';
+import { type Address, formatEther, isAddress, parseEther } from 'viem';
 import { useAccount } from 'wagmi';
 import { useBalance as usePolBalance } from 'wagmi';
 
