@@ -6,10 +6,10 @@ import { Drawer } from '@betfinio/components/ui';
 import { Button } from '@betfinio/components/ui';
 import { DrawerContent } from '@betfinio/components/ui';
 import { DrawerHeader } from '@betfinio/components/ui';
+import { toast } from '@betfinio/components/ui';
 import { CopyIcon, QrCodeIcon } from 'lucide-react';
 import { motion } from 'motion/react';
 import { QRCode } from 'react-qrcode-logo';
-import { toast } from 'sonner';
 import { useAccount } from 'wagmi';
 
 function ReceiveAction() {

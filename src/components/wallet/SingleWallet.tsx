@@ -29,8 +29,6 @@ function SingleWallet({ wallet, onClose }: { wallet: Address; onClose: () => voi
 	const handleConnectWallet = async (e: React.MouseEvent) => {
 		e.stopPropagation();
 		if (connectedWallet) {
-			console.log('wallets', wallets);
-			console.log('setting active wallet', connectedWallet);
 			await setActiveWallet(connectedWallet);
 			onClose();
 		}

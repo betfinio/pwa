@@ -13,6 +13,7 @@ export interface Manifest {
 	context: string;
 	remotes: Record<string, string>;
 	sidebar: Record<string, boolean>;
+	swipeLuxApiKey?: string;
 }
 export type RemoteModule =
 	| 'betfinio_context'

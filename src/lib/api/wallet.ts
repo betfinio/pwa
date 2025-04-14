@@ -1,7 +1,7 @@
 import logger from '@/src/config/logger';
 import type { ContextGlobalsModule } from '@/src/types';
-import { sendTransaction, simulateContract, writeContract } from '@wagmi/core';
-import { type Address, erc20Abi } from 'viem';
+import { estimateFeesPerGas, estimateGas, getGasPrice, sendTransaction, simulateContract, writeContract } from '@wagmi/core';
+import { type Address, erc20Abi, parseEther, parseGwei } from 'viem';
 import type { Config } from 'wagmi';
 import { loadRemoteModule } from './mf';
 
@@ -24,11 +24,12 @@ export const sendERC20 = async (to: Address, amount: bigint, config: Config) => 
 	return tx;
 };
 
-export const sendNative = async (to: Address, amount: bigint, config: Config) => {
-	logger.start('sending', { to, amount });
+export const sendNative = async (to: Address, amount: bigint, isMax: boolean, config: Config) => {
+	logger.start('sending', { to, amount }, isMax);
+
 	const tx = await sendTransaction(config, {
 		to,
-		value: amount,
+		value: isMax ? amount - parseEther('0.01') : amount,
 	});
 	logger.success('sent', { tx });
 	return tx;
