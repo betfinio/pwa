@@ -60,26 +60,27 @@ async function fetchNotifications(event) {
 	}
 	lastNotification = data.data.notifications.sort((a, b) => b.createdAt - a.createdAt)[0].createdAt;
 	console.log('sw: lastNotification', lastNotification);
-
-	const options = {
-		body: `${data.data.notifications.length} new notifications`,
-		icon: '/icon-512.png',
-		vibrate: [100, 50, 100],
-		data: {
-			dateOfArrival: Date.now(),
-		},
-		actions: [
-			{
-				action: 'confirm',
-				title: 'hehe',
+	for (const notification of data.data.notifications) {
+		const options = {
+			body: notification.data,
+			icon: '/icon-512.png',
+			vibrate: [100, 50, 100],
+			data: {
+				dateOfArrival: Date.now(),
 			},
-			{
-				action: 'close',
-				title: 'Lol, bro',
-			},
-		],
-	};
-	self.registration.showNotification('TEST', options).then(console.log);
+			actions: [
+				{
+					action: 'confirm',
+					title: 'hehe',
+				},
+				{
+					action: 'close',
+					title: 'Lol, bro',
+				},
+			],
+		};
+		self.registration.showNotification('TEST', options).then(console.log);
+	}
 }
 
 // get event from app about wallets
