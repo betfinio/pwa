@@ -1,9 +1,13 @@
 import { init } from '@module-federation/enhanced/runtime';
+import * as PrivyReact from '@privy-io/react-auth';
+import * as PrivyWagmi from '@privy-io/wagmi';
+import * as ReactQuery from '@tanstack/react-query';
 import * as ReactRouter from '@tanstack/react-router';
 import i18next from 'i18next';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as ReactI18Next from 'react-i18next';
+import * as Wagmi from 'wagmi';
 
 init({
 	name: 'betfin_pwa',
@@ -49,6 +53,7 @@ init({
 		'@tanstack/react-query': {
 			version: '5.66.10',
 			scope: 'default',
+			lib: () => ReactQuery,
 			shareConfig: {
 				singleton: true,
 				requiredVersion: '5.66.10',
@@ -66,6 +71,7 @@ init({
 		wagmi: {
 			version: '2.14.16',
 			scope: 'default',
+			lib: () => Wagmi,
 			shareConfig: {
 				singleton: true,
 				requiredVersion: '2.14.16',
@@ -74,6 +80,7 @@ init({
 		'@privy-io/wagmi': {
 			version: '1.0.3',
 			scope: 'default',
+			lib: () => PrivyWagmi,
 			shareConfig: {
 				singleton: true,
 				requiredVersion: '1.0.3',
@@ -82,6 +89,7 @@ init({
 		'@privy-io/react-auth': {
 			version: '2.8.3',
 			scope: 'default',
+			lib: () => PrivyReact,
 			shareConfig: {
 				singleton: true,
 				requiredVersion: '2.8.3',

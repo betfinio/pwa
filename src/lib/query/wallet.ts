@@ -18,7 +18,9 @@ export const useSendERC20 = () => {
 		onSuccess: async (data) => {
 			logger.success('success', data);
 			const promise = async () => {
+				console.log('sending');
 				await waitForTransactionReceipt(config, data);
+				console.log('sent');
 			};
 			toast.promise(promise, {
 				loading: 'Sending...',

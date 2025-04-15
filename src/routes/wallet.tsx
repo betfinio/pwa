@@ -1,8 +1,10 @@
 import { BetLogo } from '@betfinio/components/icons';
 
+import { ZeroAddress } from '@betfinio/abi';
 import { Button } from '@betfinio/components/ui';
 import { usePrivy, useWallets } from '@privy-io/react-auth';
 import { LoaderIcon } from 'lucide-react';
+import { useAccount } from 'wagmi';
 import ActionsSection from '../components/wallet/ActionsSection';
 import BalanceSection from '../components/wallet/BalanceSection';
 import ChangeWalletDrawer from '../components/wallet/ChangeWalletDrawer';
@@ -15,6 +17,7 @@ import SecuritySection from '../components/wallet/SecuritySection';
 function WalletPage() {
 	const { wallets, ready: walletsReady } = useWallets();
 	const { ready, login, authenticated } = usePrivy();
+	const { address } = useAccount();
 
 	if (!ready || !walletsReady) {
 		return (
@@ -50,6 +53,7 @@ function WalletPage() {
 			</div>
 		);
 	}
+
 	return (
 		<div className="flex flex-col gap-4 p-4">
 			<ProfileLink />

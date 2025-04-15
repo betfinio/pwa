@@ -20,12 +20,12 @@ export const useIsMember = (address: Address) => {
 			if (api) {
 				return await api.isMember(addr, config);
 			}
-			return false;
+			return null;
 		},
 		[api],
 	);
 
-	return useQuery<boolean, Error>(
+	return useQuery<boolean | null, Error>(
 		{
 			queryKey: ['isMember', address, api],
 			queryFn: () => func(address),

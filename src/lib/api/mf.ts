@@ -1,6 +1,6 @@
 import logger from '@/src/config/logger';
 import type { Manifest, RemoteModule } from '@/src/types';
-import { loadRemote, registerRemotes } from '@module-federation/enhanced/runtime';
+import { loadRemote, loadShare, registerRemotes } from '@module-federation/enhanced/runtime';
 
 export async function getManifest(): Promise<Manifest | null> {
 	// read manifest variable from local storage
@@ -31,6 +31,9 @@ export async function getManifest(): Promise<Manifest | null> {
 
 export async function loadRemoteModule<T>(module: RemoteModule, path: string) {
 	const config = await loadRemote<T>(`${module}/${path}`);
+
+	loadShare('wagmi');
+
 	if (!config) {
 		throw new Error(`Failed to load ${module} config - ${path}`);
 	}

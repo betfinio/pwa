@@ -1,6 +1,7 @@
 import { useIsMember } from '@/src/lib/query/context';
 import { ZeroAddress, truncateEthAddress } from '@betfinio/abi';
 import { BetLogo } from '@betfinio/components/icons';
+import { cn } from '@betfinio/components/lib';
 import { Link } from '@tanstack/react-router';
 import { ChevronRightIcon } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -10,9 +11,9 @@ import MemberWarning from './MemberWarning';
 function ProfileLink() {
 	const { address = ZeroAddress } = useAccount();
 
-	const { data: isMember } = useIsMember(address);
+	const { data: isMember = null } = useIsMember(address);
 
-	if (!isMember) {
+	if (!isMember && isMember !== null) {
 		return <MemberWarning />;
 	}
 
@@ -20,7 +21,12 @@ function ProfileLink() {
 		<Link to="/profile">
 			<motion.div
 				whileTap={{ scale: 0.97 }}
-				className="flex flex-row gap-2 justify-between items-center border border-border rounded-xl p-4 bg-background-lighter cursor-pointer"
+				className={cn(
+					'flex flex-row gap-2 justify-between items-center border border-border rounded-xl p-4 bg-background-lighter cursor-pointer transition-all duration-300',
+					{
+						'blur-sm': isMember === null,
+					},
+				)}
 			>
 				<div className="flex flex-row gap-2 items-center">
 					<div className="rounded-full border border-success p-1">

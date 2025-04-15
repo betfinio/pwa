@@ -1,18 +1,61 @@
+import { ZeroAddress } from '@betfinio/abi';
 import { useMediaQuery } from '@betfinio/components/hooks';
 import { SidebarProvider } from '@betfinio/components/ui';
 import { useWallets } from '@privy-io/react-auth';
+import { useSetActiveWallet } from '@privy-io/wagmi';
 import { Outlet } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
+import type { Address } from 'viem';
+import { polygon, polygonAmoy } from 'viem/chains';
+import { useAccount } from 'wagmi';
 import CustomSidebar from '../components/CustomSidebar';
 import Header from '../components/Header';
 import Navigation from '../components/Navigation';
+import Loading from '../components/pages/Loading';
+import { mfQueryClient } from '../config/query';
 import { NOTIFICATIONS_URL } from '../globals';
+import { useContextManifest } from '../lib/query/mf';
+import { useStoredAddress } from '../lib/query/wallet';
 
 function Root() {
 	const { isMobile, isTablet } = useMediaQuery();
 	const isVisible = isMobile || isTablet;
 	const { wallets, ready } = useWallets();
+	const { address } = useAccount();
+	const { data: storedAddress, updateAddress } = useStoredAddress();
 	const [hasController, setHasController] = useState<boolean>(!!navigator.serviceWorker.controller);
+	const { data: manifest } = useContextManifest(mfQueryClient);
+	const { setActiveWallet } = useSetActiveWallet();
+	const [initialized, setInitialized] = useState<boolean>(false);
+
+	useEffect(() => {
+		if (!ready) return;
+		if (storedAddress === ZeroAddress) {
+			setInitialized(true);
+		}
+
+		const wallet = wallets.find((w) => w.address === storedAddress);
+		if (wallet) {
+			setActiveWallet(wallet);
+			updateAddress(wallet.address as Address);
+		}
+	}, [ready, wallets, address, storedAddress]);
+
+	useEffect(() => {
+		if (address?.toLowerCase() === storedAddress?.toLowerCase()) {
+			setInitialized(true);
+		}
+	}, [address, storedAddress]);
+
+	useEffect(() => {
+		if (!manifest) return;
+		if (!ready) return;
+		if (address === ZeroAddress) return;
+		const wallet = wallets.find((w) => w.address === address);
+		if (wallet) {
+			wallet.switchChain(manifest.environment === 'production' ? polygon.id : polygonAmoy.id);
+		}
+	}, [manifest, ready, wallets, address]);
 
 	navigator.serviceWorker.ready.then((registration) => {
 		registration.active?.postMessage('ping');
@@ -53,6 +96,8 @@ function Root() {
 			</div>
 		);
 	}
+
+	if (!initialized) return <Loading />;
 
 	return (
 		<SidebarProvider defaultOpen className="flex flex-row max-w-(--breakpoint-2xl) mx-auto relative overflow-x-hidden">

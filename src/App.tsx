@@ -5,6 +5,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
 import { useEffect } from 'react';
 import { I18nextProvider } from 'react-i18next';
+import TestComponent from './components/TestConponent';
 import Loading from './components/pages/Loading';
 import { privyConfig } from './config/privy';
 import { mfQueryClient } from './config/query';
@@ -20,8 +21,6 @@ function App() {
 	// Load remote modules from betfinio_context
 	useLoadRemoteModule(mfQueryClient, CONTEXT_MODULE, 'style');
 
-	const config = useLoadRemoteModule<ContextConfigModule>(mfQueryClient, CONTEXT_MODULE, 'config');
-
 	const contextModule = useLoadRemoteModule<ContextContextModule>(mfQueryClient, CONTEXT_MODULE, 'lib/context');
 
 	const sharedTranslations = useLoadRemoteModule<ContextTranslationsModule>(mfQueryClient, CONTEXT_MODULE, 'translations');
@@ -35,7 +34,7 @@ function App() {
 	}, [sharedTranslations, instance]);
 
 	// Return null while modules are loading
-	if (!config || !contextModule || !sharedTranslations) {
+	if (!contextModule || !sharedTranslations) {
 		return null;
 	}
 
@@ -44,14 +43,8 @@ function App() {
 	return (
 		<I18nextProvider i18n={instance}>
 			<GlobalContextProvider>
-				<PrivyProvider appId={PRIVY_APP_ID} config={privyConfig}>
-					<QueryClientProvider client={config.queryClient}>
-						<WagmiProvider config={config.wagmiConfig}>
-							<RouterProvider router={router} defaultPendingComponent={Loading} />
-							<SonnerToaster />
-						</WagmiProvider>
-					</QueryClientProvider>
-				</PrivyProvider>
+				<RouterProvider router={router} defaultPendingComponent={Loading} />
+				<SonnerToaster />
 			</GlobalContextProvider>
 		</I18nextProvider>
 	);

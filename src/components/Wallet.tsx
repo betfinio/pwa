@@ -1,59 +1,15 @@
 import { ZeroAddress, truncateEthAddress } from '@betfinio/abi';
 import { useWallets } from '@privy-io/react-auth';
-import { useSetActiveWallet } from '@privy-io/wagmi';
 import { Link } from '@tanstack/react-router';
 import { UserCircleIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { polygon, polygonAmoy } from 'viem/chains';
-import { useAccount } from 'wagmi';
+import { useAccount, useConnect, useConnections } from 'wagmi';
 import { mfQueryClient } from '../config/query';
 import { useContextManifest } from '../lib/query/mf';
-import { useStoredAddress } from '../lib/query/wallet';
 
 function Wallet() {
 	const { address = ZeroAddress } = useAccount();
-	const { data: manifest } = useContextManifest(mfQueryClient);
-	const { wallets, ready } = useWallets();
-	const { setActiveWallet } = useSetActiveWallet();
-	const { data: storedAddress, updateAddress } = useStoredAddress();
-	const [loaded, setLoaded] = useState(false);
-
-	useEffect(() => {
-		if (address === ZeroAddress) return;
-		if (storedAddress === ZeroAddress) {
-			updateAddress(address);
-		}
-	}, [address, storedAddress]);
-
-	useEffect(() => {
-		if (!ready) return;
-		setTimeout(() => {
-			const wallet = wallets.find((w) => w.address === storedAddress);
-			if (wallet) {
-				setActiveWallet(wallet);
-				setLoaded(true);
-			}
-		}, 500);
-	}, [ready, storedAddress, wallets]);
-
-	useEffect(() => {
-		if (!manifest) return;
-		if (!ready) return;
-		if (address === ZeroAddress) return;
-		const wallet = wallets.find((w) => w.address === address);
-		if (wallet) {
-			wallet.switchChain(manifest.environment === 'production' ? polygon.id : polygonAmoy.id);
-		}
-	}, [manifest, ready, wallets, address]);
-
-	useEffect(() => {
-		if (!loaded) return;
-		if (address === ZeroAddress) return;
-		if (address.toLowerCase() !== storedAddress?.toLowerCase()) {
-			// window.location.reload();
-			// todo cause infinite reloading in some cases
-		}
-	}, [address, storedAddress, loaded]);
 
 	return (
 		<Link to="/wallet">
