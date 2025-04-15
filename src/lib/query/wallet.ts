@@ -18,9 +18,7 @@ export const useSendERC20 = () => {
 		onSuccess: async (data) => {
 			logger.success('success', data);
 			const promise = async () => {
-				console.log('sending');
-				await waitForTransactionReceipt(config, data);
-				console.log('sent');
+				await waitForTransactionReceipt(config, { hash: data });
 			};
 			toast.promise(promise, {
 				loading: 'Sending...',
@@ -40,7 +38,7 @@ export const useSendNative = () => {
 		},
 		onSuccess: async (data) => {
 			const promise = async () => {
-				await waitForTransactionReceipt(config, data);
+				await waitForTransactionReceipt(config, { hash: data });
 				await mfQueryClient.invalidateQueries({ queryKey: ['balance'] });
 				await mfQueryClient.invalidateQueries({ queryKey: ['allowance'] });
 			};
