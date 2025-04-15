@@ -20,6 +20,7 @@ export default defineConfig({
 				publicPath: true,
 				hash: false,
 			},
+			{ tag: 'script', attrs: { src: 'service-worker.js' } },
 		],
 	},
 });

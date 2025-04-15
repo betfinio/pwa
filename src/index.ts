@@ -98,4 +98,16 @@ init({
 	},
 });
 
+if ('serviceWorker' in navigator) {
+	console.log('sw: registering');
+	navigator.serviceWorker
+		.register('/service-worker.js')
+		.then(() => {
+			console.log('sw: registered');
+		})
+		.catch((err) => {
+			console.error('sw: registration failed:', err);
+		});
+}
+
 import('./bootstrap');

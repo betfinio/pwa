@@ -5,6 +5,7 @@ import { DrawerTitle } from '@betfinio/components/ui';
 import { DrawerTrigger } from '@betfinio/components/ui';
 import { DrawerContent } from '@betfinio/components/ui';
 import { useWallets } from '@privy-io/react-auth';
+import { FocusScope } from '@radix-ui/react-focus-scope';
 import { ReplaceAllIcon } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useState } from 'react';

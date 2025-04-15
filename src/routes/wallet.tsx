@@ -1,7 +1,7 @@
 import { BetLogo } from '@betfinio/components/icons';
 
 import { Button } from '@betfinio/components/ui';
-import { usePrivy, useSignupWithPasskey, useWallets } from '@privy-io/react-auth';
+import { usePrivy, useWallets } from '@privy-io/react-auth';
 import { LoaderIcon } from 'lucide-react';
 import ActionsSection from '../components/wallet/ActionsSection';
 import BalanceSection from '../components/wallet/BalanceSection';

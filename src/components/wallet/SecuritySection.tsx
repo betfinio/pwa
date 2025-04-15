@@ -2,13 +2,17 @@ import { Button, Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger
 import { usePrivy } from '@privy-io/react-auth';
 import { LockIcon } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useState } from 'react';
 
 function SecuritySection() {
 	const { setWalletRecovery, linkPasskey, linkGoogle, linkEmail } = usePrivy();
+	const [open, setOpen] = useState(false);
 	const handleSetWalletRecovery = () => {
+		setOpen(false);
 		setWalletRecovery();
 	};
 	const handleLinkPasskey = () => {
+		setOpen(false);
 		linkPasskey();
 	};
 	const handleLinkGoogle = () => {
@@ -19,7 +23,7 @@ function SecuritySection() {
 		linkEmail();
 	};
 	return (
-		<Drawer>
+		<Drawer open={open} onOpenChange={setOpen}>
 			<DrawerTrigger asChild>
 				<motion.div
 					whileTap={{ scale: 0.97 }}

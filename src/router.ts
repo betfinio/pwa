@@ -1,5 +1,6 @@
 import { createRootRoute, createRoute, createRouter, lazyRouteComponent, redirect } from '@tanstack/react-router';
 
+import Notifications from './routes/notifications';
 import Root from './routes/root';
 import Wallet from './routes/wallet';
 
@@ -14,6 +15,13 @@ const indexRoute = createRoute({
 		throw redirect({ to: '/app' });
 	},
 });
+
+const notificationsRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: '/notifications',
+	component: Notifications,
+});
+
 const walletRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: '/wallet',
@@ -254,6 +262,7 @@ rootRoute.addChildren([
 	documentsAcademyRoute,
 	createAcademyRoute,
 	appRoute,
+	notificationsRoute,
 ]);
 const router = createRouter({
 	routeTree: rootRoute,
