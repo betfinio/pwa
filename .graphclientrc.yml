@@ -1,0 +1,13 @@
+sources:
+  - name: notifications
+    handler:
+      graphql:
+        endpoint: ${PUBLIC_NOTIFICATIONS_URL}
+
+codegen:
+  scalars:
+    BigInt: bigint
+    Bytes: string
+
+documents:
+  - ./src/schema.graphql

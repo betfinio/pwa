@@ -1,0 +1,10 @@
+query GetNotifications($addresses: [Bytes!]!, $lastUpdated: BigInt!) {
+	notifications(where: { address_in: $addresses, createdAt_gt: $lastUpdated }, orderBy: createdAt, orderDirection: desc) {
+		id
+		type
+		data
+		createdAt
+		transactionHash
+		address
+	}
+}

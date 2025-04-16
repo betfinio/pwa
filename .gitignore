@@ -16,3 +16,5 @@ dist/
 
 # Public
 providers-local.json
+
+.graphclient/

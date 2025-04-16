@@ -6,6 +6,11 @@ export default defineConfig({
 	server: {
 		port: 4444,
 	},
+	tools: {
+		rspack: {
+			ignoreWarnings: [/Critical dependency: the request of a dependency is an expression/],
+		},
+	},
 	html: {
 		favicon: './public/favicon.svg',
 		title: 'Betfin Wallet',

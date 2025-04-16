@@ -1,3 +1,5 @@
+importScripts('./notification.js');
+
 const DB_NAME = 'betfinio-notifications';
 const STORE_NAME = 'settings';
 const DB_VERSION = 2;
@@ -45,20 +47,9 @@ async function saveToDB(key, value) {
 
 // Notification Operations
 async function showNotification(notification) {
-	const options = {
-		body: notification.data,
-		icon: '/icon-512.png',
-		vibrate: [100, 50, 100],
-		data: {
-			dateOfArrival: Date.now(),
-			transactionHash: notification.transactionHash,
-		},
-		actions: [
-			{ action: 'confirm', title: 'View' },
-			{ action: 'close', title: 'Dismiss' },
-		],
-	};
-	await self.registration.showNotification('New Transaction', options);
+	const data = await parseNotification(notification);
+	console.log('sw: showing notification', data);
+	await self.registration.showNotification(data.title, data.options);
 }
 
 async function fetchNotifications() {
@@ -78,6 +69,7 @@ async function fetchNotifications() {
         transactionHash
         createdAt
         data
+				type
       }
     }
   `;
