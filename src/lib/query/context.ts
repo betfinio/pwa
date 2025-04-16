@@ -1,6 +1,6 @@
 import logger from '@/src/config/logger';
 import { mfQueryClient } from '@/src/config/query';
-import type { ContextApiModule, ContextConfigModule, ContextUtilsModule, MintResult, RemoteModule } from '@/src/types';
+import type { ContextApiModule, ContextConfigModule, ContextQueryModule, ContextUtilsModule, MintResult, RemoteModule } from '@/src/types';
 import { toast } from '@betfinio/components/ui';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useCallback } from 'react';

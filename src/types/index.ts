@@ -1,9 +1,9 @@
+import type { toast as toastRef } from '@betfinio/components/ui';
 import type { QueryClient } from '@tanstack/react-query';
 import type { i18n } from 'i18next';
-import type { PropsWithChildren } from 'react';
+import type { FC, PropsWithChildren } from 'react';
 import type { Address, WriteContractReturnType } from 'viem';
 import type { Config } from 'wagmi';
-
 export interface BetfinProvider {
 	key: string;
 	url: string;
@@ -90,6 +90,17 @@ export interface ContextContextModule {
 		minimize: () => void;
 		maximize: () => void;
 		toggle: () => void;
+	};
+}
+
+export interface ContextMemberProfileComponentModule {
+	default: FC<{ toast: typeof toastRef }>;
+}
+
+export interface ContextQueryModule {
+	useOpenProfile: () => {
+		open: (address: Address) => void;
+		close: () => void;
 	};
 }
 
