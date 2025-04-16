@@ -8,6 +8,14 @@ const rootRoute = createRootRoute({
 	component: Root,
 });
 
+const indexHTMLRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: '/index.html',
+	beforeLoad: async () => {
+		throw redirect({ to: '/' });
+	},
+});
+
 const indexRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: '/',
@@ -230,6 +238,7 @@ const appRoute = createRoute({
 });
 
 rootRoute.addChildren([
+	indexHTMLRoute,
 	indexRoute,
 	walletRoute,
 	indexStakingRoute,

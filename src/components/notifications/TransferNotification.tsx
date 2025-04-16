@@ -38,7 +38,12 @@ function TransferNotification({ notification }: { notification: Notification }) 
 			icon={icon}
 			title={title}
 			description={description}
-			value={<BetValue value={amount} withIcon iconClassName="size-3" className="text-sm" />}
+			value={
+				<div className="flex flex-row items-center text-sm">
+					{address === to ? '+' : '-'}
+					<BetValue value={amount} withIcon iconClassName="size-3" className="text-sm" />
+				</div>
+			}
 		/>
 	);
 }

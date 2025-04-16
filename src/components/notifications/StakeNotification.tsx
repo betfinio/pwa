@@ -28,7 +28,12 @@ function StakeNotification({ notification, variant }: { notification: Notificati
 			icon={icon}
 			title={title}
 			description={description}
-			value={<BetValue value={amount} withIcon iconClassName="size-3" className="text-sm" />}
+			value={
+				<div className="flex flex-row items-center text-sm">
+					-
+					<BetValue value={amount} withIcon iconClassName="size-3" className="text-sm" />
+				</div>
+			}
 		/>
 	);
 }
