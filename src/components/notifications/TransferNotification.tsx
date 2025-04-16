@@ -1,7 +1,7 @@
 import type { Notification } from '@/src/types/notifications';
 import { truncateEthAddress } from '@betfinio/abi';
 import { BetValue } from '@betfinio/components';
-import { MinusCircleIcon, PlusCircleIcon } from 'lucide-react';
+import { ArrowDownCircleIcon, ArrowUpCircleIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import BaseNotification from './BaseNotification';
 
@@ -28,9 +28,9 @@ function TransferNotification({ notification }: { notification: Notification }) 
 
 	const icon = useMemo(() => {
 		if (address === from) {
-			return <MinusCircleIcon className="size-8 text-destructive" />;
+			return <ArrowUpCircleIcon className="size-8 p-1 text-destructive" />;
 		}
-		return <PlusCircleIcon className="size-8 text-success" />;
+		return <ArrowDownCircleIcon className="size-8 p-1 text-success" />;
 	}, [notification]);
 
 	return (

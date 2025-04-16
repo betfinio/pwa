@@ -1,9 +1,11 @@
+importScripts('./notifications/transfer.js');
+importScripts('./notifications/pass.js');
+importScripts('./notifications/staked.js');
 /**
- * @param {{data: {transactionHash: string, createdAt: number, transactionHash: string, type: "TRANSFER"|"PASS", data: string, address: string}}} notification
+ * @param {{data: {transactionHash: string, createdAt: number, transactionHash: string, type: "TRANSFER"|"PASS"|"CONSERVATIVE_STAKE"|"DYNAMIC_STAKE", data: string, address: string}}} notification
  * @returns {Promise<{title: string, options?: {actions?: {action: string, title: string, icon?:string}[], badge?: string, body?: string, data?: string, icon: string,}}}>}
  */
 async function parseNotification(notification) {
-	const data = notification.data;
 	console.log('sw: notification', notification);
 	return {
 		title: getTitle(notification),
@@ -16,35 +18,32 @@ async function parseNotification(notification) {
 
 function getTitle(notification) {
 	if (notification.type === 'TRANSFER') {
-		const recipient = notification.address.toLowerCase();
-		const body = JSON.parse(notification.data);
-		if (recipient === body.from.toLowerCase()) {
-			return 'Outgoing Transfer';
-		}
-		return 'Incoming Transfer';
+		return getTransferTitle(notification);
 	}
 	if (notification.type === 'PASS') {
-		return 'Welcome to Betfin!';
+		return getPassTitle(notification);
+	}
+	if (notification.type === 'CONSERVATIVE_STAKE') {
+		return getStakedTitle(notification);
+	}
+	if (notification.type === 'DYNAMIC_STAKE') {
+		return getStakedTitle(notification);
 	}
 	return 'Unknown';
 }
 
 function getBody(notification) {
 	if (notification.type === 'TRANSFER') {
-		const recipient = notification.address;
-		const body = JSON.parse(notification.data);
-		if (recipient === body.from.toLowerCase()) {
-			return `You sent ${parseGwei(body.amount)} BET to ${truncateAddress(body.to)}`;
-		}
-		return `You received ${parseGwei(body.amount)} BET from ${truncateAddress(body.from)}`;
+		return getTransferBody(notification);
+	}
+	if (notification.type === 'PASS') {
+		return getPassBody(notification);
+	}
+	if (notification.type === 'CONSERVATIVE_STAKE') {
+		return getStakedBody(notification, 'conservative');
+	}
+	if (notification.type === 'DYNAMIC_STAKE') {
+		return getStakedBody(notification, 'dynamic');
 	}
 	return 'Unknown';
-}
-
-function parseGwei(value) {
-	return (Number(value) / 10 ** 18).toFixed(2);
-}
-
-function truncateAddress(address) {
-	return `${address.slice(0, 6)}...${address.slice(-4)}`;
 }

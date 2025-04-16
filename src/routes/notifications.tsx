@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import { AnimatePresence, motion } from 'motion/react';
 import { useMemo } from 'react';
 import PassNotification from '../components/notifications/PassNotification';
+import StakeNotification from '../components/notifications/StakeNotification';
 import TransferNotification from '../components/notifications/TransferNotification';
 import { useActiveNotifications } from '../lib/query/notifications';
 
@@ -12,9 +13,43 @@ function Notifications() {
 	const groupedNotifications = useMemo(() => {
 		if (!notifications) return {};
 
-		return notifications.reduce(
+		// First, group notifications by transactionHash
+		const transactionGroups = notifications.reduce(
+			(acc, notification) => {
+				if (!acc[notification.transactionHash]) {
+					acc[notification.transactionHash] = [];
+				}
+				acc[notification.transactionHash].push(notification);
+				return acc;
+			},
+			{} as Record<string, Notification[]>,
+		);
+
+		// Process each transaction group to combine related notifications
+		const processedNotifications = Object.values(transactionGroups).map((group) => {
+			const stakeNotification = group.find((n) => n.type === 'CONSERVATIVE_STAKE' || n.type === 'DYNAMIC_STAKE');
+			const transferNotification = group.find((n) => n.type === 'TRANSFER');
+
+			// If we have both stake and transfer, combine them
+			if (stakeNotification && transferNotification) {
+				const transferData = JSON.parse(transferNotification.data);
+				const combinedNotification = {
+					...stakeNotification,
+					data: JSON.stringify({
+						...JSON.parse(stakeNotification.data),
+						amount: transferData.amount,
+					}),
+				};
+				return combinedNotification;
+			}
+
+			// If it's just a single notification, return the first one from the group
+			return group[0];
+		});
+
+		// Group by date as before
+		return processedNotifications.reduce(
 			(groups, notification) => {
-				// Convert timestamp to date string
 				const date = new Date(Number(notification.createdAt) * 1000);
 				const dateStr = format(date, 'yyyy-MM-dd');
 
@@ -70,6 +105,12 @@ function SingleNotification({ notification }: { notification: Notification }) {
 	}
 	if (notification.type === 'PASS') {
 		return <PassNotification />;
+	}
+	if (notification.type === 'CONSERVATIVE_STAKE') {
+		return <StakeNotification notification={notification} variant="conservative" />;
+	}
+	if (notification.type === 'DYNAMIC_STAKE') {
+		return <StakeNotification notification={notification} variant="dynamic" />;
 	}
 	return null;
 }

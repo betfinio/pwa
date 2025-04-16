@@ -9,4 +9,11 @@ export interface Notification {
 	transactionHash: Address;
 }
 
-export type NotificationType = 'TRANSFER' | 'PASS';
+export type NotificationType =
+	| 'TRANSFER'
+	| 'PASS'
+	| 'CONSERVATIVE_STAKE'
+	| 'DYNAMIC_STAKE'
+	| 'CONSERVATIVE_CLAIMED'
+	| 'DYNAMIC_CLAIMED'
+	| 'CONSERVATIVE_CLAIMABLE';
