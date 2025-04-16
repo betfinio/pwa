@@ -4,6 +4,7 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
+		"prebuild": "graphclient build",
 		"build": "rsbuild build",
 		"check": "biome check --write",
 		"dev": "bun run build:schema:dev && rsbuild dev --open",

@@ -13,6 +13,6 @@ export const useActiveNotifications = () => {
 		queryKey: ['activeNotifications', address, lastNotification],
 		queryFn: () => fetchActiveNotifications(address, lastNotification),
 		enabled: isFetched && address !== ZeroAddress,
-		refetchInterval: 10000,
+		refetchInterval: 60 * 1000,
 	});
 };

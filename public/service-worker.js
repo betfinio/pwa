@@ -3,7 +3,7 @@ importScripts('./notification.js');
 const DB_NAME = 'betfinio-notifications';
 const STORE_NAME = 'settings';
 const DB_VERSION = 2;
-const POLL_INTERVAL = 5000;
+const POLL_INTERVAL = 60 * 1000;
 
 let interval = null;
 const wallets = [];
