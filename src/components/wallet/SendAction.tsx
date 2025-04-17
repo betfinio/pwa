@@ -22,7 +22,14 @@ import { useBalance as usePolBalance } from 'wagmi';
 const QRScanner = ({ webcamRef }: { webcamRef: React.RefObject<Webcam | null> }) => (
 	<motion.div key="qr" initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}>
 		<div className="relative w-full overflow-hidden">
-			<Webcam ref={webcamRef} audio={false} screenshotFormat="image/png" className="w-full aspect-square object-cover border border-border rounded-xl" />
+			<Webcam
+				mirrored={true}
+				ref={webcamRef}
+				videoConstraints={{ facingMode: 'environment' }}
+				audio={false}
+				screenshotFormat="image/png"
+				className="w-full aspect-square object-cover border border-border rounded-xl"
+			/>
 		</div>
 	</motion.div>
 );
