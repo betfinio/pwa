@@ -45,6 +45,10 @@ export interface AppModule {
 	default: React.ComponentType;
 }
 
+export interface AppSidebarModule {
+	default: React.ComponentType;
+}
+
 // context modules
 
 export interface ContextConfigModule {

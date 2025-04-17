@@ -1,3 +1,4 @@
+import * as Components from '@betfinio/components';
 import { init } from '@module-federation/enhanced/runtime';
 import * as PrivyReact from '@privy-io/react-auth';
 import * as PrivyWagmi from '@privy-io/wagmi';
@@ -87,7 +88,7 @@ init({
 			},
 		},
 		'@privy-io/react-auth': {
-			version: '2.8.3',
+			version: '2.9.1',
 			scope: 'default',
 			lib: () => PrivyReact,
 			shareConfig: {
@@ -96,11 +97,11 @@ init({
 			},
 		},
 		'@betfinio/components': {
-			version: '2.1.4',
+			version: '2.2.1',
 			scope: 'default',
 			shareConfig: {
 				singleton: true,
-				requiredVersion: '2.1.4',
+				requiredVersion: '2.2.1',
 			},
 		},
 	},

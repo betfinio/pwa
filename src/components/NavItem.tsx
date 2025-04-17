@@ -26,13 +26,35 @@ export interface NavItemProps {
 	disabled?: boolean;
 	className?: string;
 	external?: boolean;
+	includeHref?: string;
+	excludeHref?: string;
 	onClick?: () => void;
 }
 
-const NavItem: FC<NavItemProps> = ({ icon, label, href, children, external = false, disabled = !external, onClick }) => {
+const NavItem: FC<NavItemProps> = ({ icon, label, href, children, external = false, disabled = !external, onClick, includeHref, excludeHref }) => {
 	const { t } = useTranslation('shared', { keyPrefix: 'sidebar' });
 	const { pathname } = useLocation();
-	const isActive = (href: string) => pathname === href;
+	const isActive = (href: string) => {
+		// if 'includeHref' is set, we take it as 'base href' to match 'startsWith' (predict, academy).
+		// if 'excludeHref' is set, we exclude this matching href (academy/events)
+		// otherwise, we match exact hrf
+
+		if (includeHref) {
+			if (!pathname.startsWith(includeHref)) {
+				return false;
+			}
+		}
+		if (excludeHref) {
+			if (pathname.startsWith(excludeHref)) {
+				return false;
+			}
+		}
+		if (!includeHref && !excludeHref) {
+			return pathname === href;
+		}
+		return true;
+	};
+
 	const [isOpen, setIsOpen] = useState(false);
 	const { state: sidebarState, setOpen, setOpenMobile } = useSidebar();
 	const { data: manifest } = useContextManifest(mfQueryClient);
@@ -46,6 +68,7 @@ const NavItem: FC<NavItemProps> = ({ icon, label, href, children, external = fal
 
 	const labelTranslated = t(label as string, { defaultValue: label });
 	const handleOnClick = () => {
+		console.log('clicked');
 		setOpenMobile(false);
 		if (onClick) {
 			onClick();
@@ -104,7 +127,7 @@ const NavItem: FC<NavItemProps> = ({ icon, label, href, children, external = fal
 
 	return (
 		<SidebarMenuItem>
-			<SidebarMenuButton tooltip={labelTranslated} asChild onClick={handleOnClick}>
+			<SidebarMenuButton isActive={isActive(href)} tooltip={labelTranslated} asChild onClick={handleOnClick}>
 				<Link to={href}>
 					{icon} {labelTranslated}
 				</Link>

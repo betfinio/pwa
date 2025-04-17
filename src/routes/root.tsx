@@ -1,6 +1,6 @@
 import { ZeroAddress } from '@betfinio/abi';
+import { SidebarProvider } from '@betfinio/components';
 import { useMediaQuery } from '@betfinio/components/hooks';
-import { SidebarProvider } from '@betfinio/components/ui';
 import { useWallets } from '@privy-io/react-auth';
 import { useSetActiveWallet } from '@privy-io/wagmi';
 import { Outlet } from '@tanstack/react-router';

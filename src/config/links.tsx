@@ -28,7 +28,7 @@ const navigation: NavItemProps[] = [
 ];
 const games: NavItemProps[] = [
 	{ label: 'lobby', icon: <Lobby className={'w-4 h-4'} />, href: '/app', disabled: false },
-	{ label: 'lottery', icon: <Ticket className={'w-4 h-4'} />, href: '/games/lottery', disabled: false },
+	{ label: 'lottery', icon: <Ticket className={'w-4 h-4'} />, href: '/games/lottery', includeHref: '/games/lottery', disabled: false },
 	{
 		label: 'roulette',
 		icon: <Roulette className={'w-4 h-4'} />,
@@ -51,7 +51,7 @@ const games: NavItemProps[] = [
 		],
 	},
 	{ label: 'stones', icon: <Stones className={'w-4 h-4'} />, href: '/games/stones', disabled: false },
-	{ label: 'predict', icon: <Predict className={'w-4 h-4'} />, href: '/games/predict', disabled: false },
+	{ label: 'predict', icon: <Predict className={'w-4 h-4'} />, href: '/games/predict', includeHref: '/games/predict', disabled: false },
 	{ label: 'hilo', icon: <ArrowUpDown className={'w-4 h-4'} />, href: '/games/hilo' },
 	{ label: 'binary', icon: <Binary className={'w-4 h-4'} />, href: '/games/poker' },
 	{ label: 'slots', icon: <Slots className={'w-4 h-4'} />, href: '/games/slots' },
