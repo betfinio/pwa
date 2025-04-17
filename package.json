@@ -28,6 +28,7 @@
 		"consola": "^3.4.2",
 		"i18next": "^24.2.3",
 		"idb": "^8.0.2",
+		"jsqr": "^1.4.0",
 		"lefthook": "^1.11.10",
 		"lucide-react": "^0.476.0",
 		"mipd": "^0.0.7",
@@ -36,6 +37,7 @@
 		"react-dom": "^19.1.0",
 		"react-i18next": "^15.4.1",
 		"react-qrcode-logo": "^3.0.0",
+		"react-webcam": "^7.2.0",
 		"tailwindcss": "^4.1.4",
 		"viem": "^2.27.2",
 		"wagmi": "^2.14.16"
