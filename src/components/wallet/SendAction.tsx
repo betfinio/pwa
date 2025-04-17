@@ -24,7 +24,7 @@ const QRScanner = ({ webcamRef }: { webcamRef: React.RefObject<Webcam | null> })
 		<div className="relative w-full overflow-hidden">
 			<Webcam
 				ref={webcamRef}
-				videoConstraints={{ facingMode: 'environment' }}
+				videoConstraints={{ facingMode: 'environment', frameRate: 60 }}
 				audio={false}
 				screenshotFormat="image/png"
 				className="w-full aspect-square object-cover border border-border rounded-xl"
