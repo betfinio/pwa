@@ -23,7 +23,6 @@ const QRScanner = ({ webcamRef }: { webcamRef: React.RefObject<Webcam | null> })
 	<motion.div key="qr" initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}>
 		<div className="relative w-full overflow-hidden">
 			<Webcam
-				mirrored={true}
 				ref={webcamRef}
 				videoConstraints={{ facingMode: 'environment' }}
 				audio={false}
