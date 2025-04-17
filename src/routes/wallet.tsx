@@ -1,10 +1,7 @@
-import { BetLogo } from '@betfinio/components/icons';
-
-import { ZeroAddress } from '@betfinio/abi';
+import { BetfinLogo } from '@betfinio/components/icons';
 import { Button } from '@betfinio/components/ui';
-import { usePrivy, useWallets } from '@privy-io/react-auth';
-import { LoaderIcon } from 'lucide-react';
-import { useAccount } from 'wagmi';
+import { useLoginWithPasskey, usePrivy, useSignupWithPasskey, useWallets } from '@privy-io/react-auth';
+import { FingerprintIcon, LoaderIcon } from 'lucide-react';
 import ActionsSection from '../components/wallet/ActionsSection';
 import BalanceSection from '../components/wallet/BalanceSection';
 import ChangeWalletDrawer from '../components/wallet/ChangeWalletDrawer';
@@ -17,7 +14,6 @@ import SecuritySection from '../components/wallet/SecuritySection';
 function WalletPage() {
 	const { wallets, ready: walletsReady } = useWallets();
 	const { ready, login, authenticated } = usePrivy();
-	const { address } = useAccount();
 
 	if (!ready || !walletsReady) {
 		return (
@@ -28,27 +24,38 @@ function WalletPage() {
 	}
 
 	const handleLogin = async () => {
-		await login();
+		await login({
+			loginMethods: ['email', 'google'],
+		});
 	};
 
 	if (!authenticated) {
 		return (
-			<div className="flex flex-col gap-4 justify-evenly w-full h-screen items-center p-4">
-				<div className="border border-primary rounded-full p-4">
-					<BetLogo className="size-12" />
+			<div className="flex flex-col gap-4 justify-between w-full h-full items-center p-4">
+				<div className="relative h-full flex flex-col justify-center items-center w-full">
+					<div className="bg-violet-900/50 size-[500px] rounded-full blur-3xl z-0 absolute" />
+					<div className="bg-violet-900 size-[300px] rounded-full blur-3xl z-0 absolute" />
+					<BetfinLogo className="size-40 z-1" />
 				</div>
-				<Button onClick={handleLogin}>Login or sign up</Button>
+				<Button onClick={handleLogin} className="w-full gap-2">
+					<FingerprintIcon className="size-4" />
+					Login or sign up
+				</Button>
 			</div>
 		);
 	}
 	if (wallets.length === 0) {
 		return (
-			<div className="flex flex-col gap-4  w-full h-screen items-center p-4">
-				<h2 className="text-2xl font-semibold">Welcome to Betfin</h2>
-				<div className="text-muted-foreground">Are you existing user?</div>
-				<ImportWalletDrawer />
-				<div className="text-muted-foreground">Are you new user?</div>
-				<CreateWalletDrawer onClose={() => {}} />
+			<div className="flex flex-col gap-4 w-full h-full items-center p-4 justify-between">
+				<div className="h-full flex flex-col items-center">
+					<BetfinLogo className="size-40 z-1" />
+
+					<div>You are authenticated, but you have no wallets.</div>
+				</div>
+				<div className="flex flex-col gap-4 w-full">
+					<ImportWalletDrawer />
+					<CreateWalletDrawer onClose={() => {}} />
+				</div>
 				<LogoutDialog />
 			</div>
 		);

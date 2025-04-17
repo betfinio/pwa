@@ -14,5 +14,6 @@ export const useActiveNotifications = () => {
 		queryFn: () => fetchActiveNotifications(address, lastNotification),
 		enabled: isFetched && address !== ZeroAddress,
 		refetchInterval: 60 * 1000,
+		refetchOnMount: true,
 	});
 };

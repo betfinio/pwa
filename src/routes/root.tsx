@@ -21,12 +21,18 @@ function Root() {
 	const { isMobile, isTablet } = useMediaQuery();
 	const isVisible = isMobile || isTablet;
 	const { wallets, ready } = useWallets();
-	const { address } = useAccount();
+	const { address, status } = useAccount();
 	const { data: storedAddress, updateAddress } = useStoredAddress();
 	const [hasController, setHasController] = useState<boolean>(!!navigator.serviceWorker.controller);
 	const { data: manifest } = useContextManifest(mfQueryClient);
 	const { setActiveWallet } = useSetActiveWallet();
 	const [initialized, setInitialized] = useState<boolean>(false);
+
+	useEffect(() => {
+		if (status === 'disconnected' && !address) {
+			setInitialized(true);
+		}
+	}, [status, address]);
 
 	useEffect(() => {
 		if (!ready) return;
@@ -96,7 +102,7 @@ function Root() {
 			</div>
 		);
 	}
-
+	console.log('initialized', initialized);
 	if (!initialized) return <Loading />;
 
 	return (

@@ -19,6 +19,7 @@
 	"dependencies": {
 		"@betfinio/abi": "^2.4.2",
 		"@betfinio/components": "^2.2.1",
+		"@icons-pack/react-simple-icons": "^12.6.0",
 		"@module-federation/enhanced": "^0.11.4",
 		"@privy-io/react-auth": "^2.9.1",
 		"@privy-io/wagmi": "^1.0.3",

@@ -1,15 +1,12 @@
 import { ZeroAddress, truncateEthAddress } from '@betfinio/abi';
-import { useWallets } from '@privy-io/react-auth';
 import { Link } from '@tanstack/react-router';
 import { UserCircleIcon } from 'lucide-react';
-import { useEffect } from 'react';
-import { polygon, polygonAmoy } from 'viem/chains';
-import { useAccount, useConnect, useConnections } from 'wagmi';
-import { mfQueryClient } from '../config/query';
-import { useContextManifest } from '../lib/query/mf';
+import { useAccount } from 'wagmi';
 
 function Wallet() {
 	const { address = ZeroAddress } = useAccount();
+
+	if (address === ZeroAddress) return null;
 
 	return (
 		<Link to="/wallet">

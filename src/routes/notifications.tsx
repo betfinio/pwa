@@ -64,6 +64,10 @@ function Notifications() {
 		);
 	}, [notifications]);
 
+	if (!notifications || notifications.length === 0) {
+		return <div className="flex flex-col gap-2 p-4 w-full justify-center items-center text-muted-foreground">No notifications</div>;
+	}
+
 	return (
 		<div className="flex flex-col gap-2 p-2">
 			<AnimatePresence mode="popLayout">
