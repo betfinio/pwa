@@ -13,7 +13,7 @@ const indexHTMLRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: '/index.html',
 	beforeLoad: async () => {
-		throw redirect({ to: '/' });
+		throw redirect({ to: '/wallet' });
 	},
 });
 
@@ -27,7 +27,7 @@ const indexRoute = createRoute({
 	getParentRoute: () => rootRoute,
 	path: '/',
 	beforeLoad: async () => {
-		throw redirect({ to: '/app' });
+		throw redirect({ to: '/wallet' });
 	},
 });
 
