@@ -14,8 +14,8 @@ function WalletPage() {
 	const { ready, authenticated, createWallet } = usePrivy();
 
 	const { login } = useLogin({
-		onComplete: ({ isNewUser }) => {
-			if (isNewUser) {
+		onComplete: () => {
+			if (wallets.length === 0) {
 				createWallet();
 			}
 		},
