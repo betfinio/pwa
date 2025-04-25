@@ -1,7 +1,7 @@
 {
 	"name": "Betfin Wallet",
 	"short_name": "Betfin Wallet",
-	"start_url": "/index.html",
+	"start_url": "/wallet",
 	"display": "standalone",
 	"background_color": "#000000",
 	"theme_color": "#000000",
