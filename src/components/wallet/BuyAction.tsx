@@ -6,34 +6,27 @@ import { DrawerTrigger } from '@betfinio/components/ui';
 import { Drawer } from '@betfinio/components/ui';
 import { DrawerContent } from '@betfinio/components/ui';
 import { DrawerHeader } from '@betfinio/components/ui';
+import { useFundWallet } from '@privy-io/react-auth';
 import { WalletIcon } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useCallback } from 'react';
+import { useAccount } from 'wagmi';
 
 function BuyAction() {
+	const { fundWallet } = useFundWallet();
+	const { address, chain } = useAccount();
+	const handleFund = useCallback(() => {
+		if (address) {
+			fundWallet(address, { chain: { id: chain?.id ?? 137 } });
+		}
+	}, [address, fundWallet]);
 	return (
-		<Drawer>
-			<DrawerTrigger asChild>
-				<div className="flex flex-col items-center gap-2 w-full">
-					<motion.div whileTap={{ scale: 0.95 }} className="border border-border rounded-xl p-4 bg-background-lighter cursor-pointer">
-						<WalletIcon className="size-6 text-primary" />
-					</motion.div>
-					<div className="text-sm">Buy</div>
-				</div>
-			</DrawerTrigger>
-			<DrawerContent>
-				<DrawerHeader className="pb-0">
-					<DrawerTitle>Buy</DrawerTitle>
-				</DrawerHeader>
-				<DrawerDescription className="hidden" />
-
-				<div className={cn('flex flex-col gap-2 items-center justify-center p-4')}>
-					<div className="text-sm">Buying is possible on external DEXs like Uniswap.</div>
-					<a href={UNISWAP_URL} target="_blank" rel="noreferrer">
-						<Button>Navigate to Uniswap</Button>
-					</a>
-				</div>
-			</DrawerContent>
-		</Drawer>
+		<div className="flex flex-col items-center gap-2 w-full" onClick={handleFund}>
+			<motion.div whileTap={{ scale: 0.95 }} className="border border-border rounded-xl p-4 bg-background-lighter cursor-pointer">
+				<WalletIcon className="size-6 text-primary" />
+			</motion.div>
+			<div className="text-sm">Buy</div>
+		</div>
 	);
 }
 

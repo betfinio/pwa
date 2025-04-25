@@ -1,19 +1,25 @@
 import { BetfinLogo } from '@betfinio/components/icons';
 import { Button } from '@betfinio/components/ui';
-import { useLoginWithPasskey, usePrivy, useSignupWithPasskey, useWallets } from '@privy-io/react-auth';
+import { useLogin, usePrivy, useWallets } from '@privy-io/react-auth';
 import { FingerprintIcon, LoaderIcon } from 'lucide-react';
 import ActionsSection from '../components/wallet/ActionsSection';
 import BalanceSection from '../components/wallet/BalanceSection';
 import ChangeWalletDrawer from '../components/wallet/ChangeWalletDrawer';
-import CreateWalletDrawer from '../components/wallet/CreateWalletDrawer';
-import ImportWalletDrawer from '../components/wallet/ImportWalletDrawer';
 import LogoutDialog from '../components/wallet/LogoutDialog';
 import ProfileLink from '../components/wallet/ProfileLink';
 import SecuritySection from '../components/wallet/SecuritySection';
 
 function WalletPage() {
 	const { wallets, ready: walletsReady } = useWallets();
-	const { ready, login, authenticated } = usePrivy();
+	const { ready, authenticated, createWallet } = usePrivy();
+
+	const { login } = useLogin({
+		onComplete: ({ isNewUser }) => {
+			if (isNewUser) {
+				createWallet();
+			}
+		},
+	});
 
 	if (!ready || !walletsReady) {
 		return (
@@ -24,9 +30,7 @@ function WalletPage() {
 	}
 
 	const handleLogin = async () => {
-		await login({
-			loginMethods: ['email', 'google'],
-		});
+		login({ loginMethods: ['email', 'google'] });
 	};
 
 	if (!authenticated) {
@@ -47,16 +51,7 @@ function WalletPage() {
 	if (wallets.length === 0) {
 		return (
 			<div className="flex flex-col gap-4 w-full h-full items-center p-4 justify-between">
-				<div className="h-full flex flex-col items-center">
-					<BetfinLogo className="size-40 z-1" />
-
-					<div>You are authenticated, but you have no wallets.</div>
-				</div>
-				<div className="flex flex-col gap-4 w-full">
-					<ImportWalletDrawer />
-					<CreateWalletDrawer onClose={() => {}} />
-				</div>
-				<LogoutDialog />
+				<LoaderIcon className="w-8 h-8 animate-spin" />
 			</div>
 		);
 	}

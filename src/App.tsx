@@ -1,19 +1,13 @@
 import { SonnerToaster } from '@betfinio/components';
-import { PrivyProvider } from '@privy-io/react-auth';
-import { WagmiProvider } from '@privy-io/wagmi';
-import { QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
 import { useEffect } from 'react';
 import { I18nextProvider } from 'react-i18next';
-import TestComponent from './components/TestConponent';
 import Loading from './components/pages/Loading';
-import { privyConfig } from './config/privy';
 import { mfQueryClient } from './config/query';
-import { PRIVY_APP_ID } from './globals';
 import instance from './i18n';
 import { useLoadRemoteModule } from './lib/query/mf';
 import router from './router';
-import type { ContextConfigModule, ContextContextModule, ContextTranslationsModule, RemoteModule } from './types';
+import type { ContextContextModule, ContextTranslationsModule, RemoteModule } from './types';
 
 const CONTEXT_MODULE: RemoteModule = 'betfinio_context';
 
