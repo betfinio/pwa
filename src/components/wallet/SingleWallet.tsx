@@ -1,6 +1,6 @@
 import { useStoredAddress } from '@/src/lib/query/wallet';
 import { truncateEthAddress } from '@betfinio/abi';
-import { BetLogo } from '@betfinio/components/icons';
+import { BetLogo, Fox } from '@betfinio/components/icons';
 import { Badge, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, toast } from '@betfinio/components/ui';
 import { type ConnectedWallet, usePrivy, useWallets } from '@privy-io/react-auth';
 import { useSetActiveWallet } from '@privy-io/wagmi';
@@ -49,13 +49,16 @@ function SingleWallet({ wallet, onClose }: { wallet: Address; onClose: () => voi
 		>
 			<div className="flex items-center gap-2 justify-between w-full">
 				<div className="flex flex-row items-center gap-2">
-					<div className="rounded-full border border-success p-1 ">
-						<BetLogo className="size-6" />
+					<div className="rounded-full border border-primary p-2 ">
+						{connectedWallet?.walletClientType === 'metamask' ? <Fox className="size-4" /> : <BetLogo className="size-4" />}
 					</div>
 					<div className="text-sm">{truncateEthAddress(wallet)}</div>
 				</div>
-				{connectedWallet?.imported && <Badge>Imported</Badge>}
-				{address === wallet && <Badge className="bg-success text-success-foreground">Connected</Badge>}
+				<div className="flex flex-row items-center gap-2">
+					{connectedWallet?.imported && <Badge>Imported</Badge>}
+					{connectedWallet?.connectorType === 'injected' && <Badge>Injected</Badge>}
+					{address === wallet && <Badge className="bg-success text-success-foreground">Connected</Badge>}
+				</div>
 			</div>
 			<div>
 				<DropdownMenu>
