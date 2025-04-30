@@ -14,13 +14,13 @@ import ImportWalletDrawer from './ImportWalletDrawer';
 
 function AddWalletDrawer() {
 	const [open, setOpen] = useState(false);
-	const { connectWallet } = usePrivy();
+	const { connectWallet, user } = usePrivy();
 	const handleClose = () => {
 		setOpen(false);
 	};
 	const handleConnect = () => {
 		setOpen(false);
-		connectWallet();
+		connectWallet({});
 	};
 	return (
 		<Drawer open={open} onOpenChange={setOpen}>
@@ -38,8 +38,8 @@ function AddWalletDrawer() {
 				</DrawerHeader>
 				<DrawerDescription className="hidden" />
 				<div className="flex flex-col gap-2 p-4">
-					<CreateWalletDrawer onClose={handleClose} />
-					<ImportWalletDrawer />
+					{user && <CreateWalletDrawer onClose={handleClose} />}
+					{user && <ImportWalletDrawer />}
 					<Button className="gap-2 border-white/50" variant="outline" onClick={handleConnect}>
 						<Fox className="size-4" />
 						Connect wallet

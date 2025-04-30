@@ -1,7 +1,8 @@
 import { BetfinLogo, Fox } from '@betfinio/components/icons';
 import { Button } from '@betfinio/components/ui';
-import { useConnectWallet, useLogin, usePrivy, useWallets } from '@privy-io/react-auth';
-import { FingerprintIcon, IdCardIcon, LoaderIcon } from 'lucide-react';
+import { useLogin, usePrivy, useWallets } from '@privy-io/react-auth';
+import { IdCardIcon, LoaderIcon } from 'lucide-react';
+import { useAccount } from 'wagmi';
 import ActionsSection from '../components/wallet/ActionsSection';
 import BalanceSection from '../components/wallet/BalanceSection';
 import ChangeWalletDrawer from '../components/wallet/ChangeWalletDrawer';
@@ -12,15 +13,10 @@ import SecuritySection from '../components/wallet/SecuritySection';
 
 function WalletPage() {
 	const { wallets, ready: walletsReady } = useWallets();
-	const { ready, authenticated, createWallet } = usePrivy();
+	const { ready, authenticated, connectWallet } = usePrivy();
+	const { address } = useAccount();
 
-	const { login } = useLogin({
-		onComplete: () => {
-			if (wallets.length === 0) {
-				createWallet();
-			}
-		},
-	});
+	const { login } = useLogin();
 
 	if (!ready || !walletsReady) {
 		return (
@@ -31,13 +27,13 @@ function WalletPage() {
 	}
 
 	const handleLogin = async () => {
-		login({ loginMethods: ['wallet'] });
+		connectWallet();
 	};
 	const handleSocials = () => {
 		login({ loginMethods: ['email', 'google'] });
 	};
 
-	if (!authenticated) {
+	if (!authenticated && !address) {
 		return (
 			<div className="flex flex-col gap-4 justify-between w-full h-full items-center p-4">
 				<div className="relative h-full flex flex-col justify-start py-20 items-center w-full">

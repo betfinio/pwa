@@ -1,3 +1,4 @@
+import { BetLogo, BetfinLogo } from '@betfinio/components/icons';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@betfinio/components/ui';
 import { useEffect, useState } from 'react';
 import { mfQueryClient } from '../config/query';
@@ -32,7 +33,9 @@ function Switcher() {
 				<SelectGroup>
 					{urls.map((provider) => (
 						<SelectItem key={provider.key} value={provider.key}>
-							{provider.key}
+							<div className="flex flex-row items-center">
+								<BetfinLogo className="w-12" />.{provider.key.split('.')[1]}
+							</div>
 						</SelectItem>
 					))}
 				</SelectGroup>

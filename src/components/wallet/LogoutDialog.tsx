@@ -4,11 +4,18 @@ import { DialogContent, DialogHeader, DialogTitle } from '@betfinio/components/u
 import { DialogTrigger } from '@betfinio/components/ui';
 import { Dialog } from '@betfinio/components/ui';
 import { useLogout } from '@privy-io/react-auth';
+import { disconnect } from '@wagmi/core';
 import { LogOutIcon } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useConfig } from 'wagmi';
 
 function LogoutDialog() {
+	const config = useConfig();
 	const { logout } = useLogout();
+	const handleLogout = () => {
+		logout();
+		disconnect(config);
+	};
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
@@ -27,7 +34,7 @@ function LogoutDialog() {
 				<DialogDescription className="text-center text-sm text-muted-foreground">Are you sure you want to logout?</DialogDescription>
 				<DialogFooter>
 					<motion.div whileTap={{ scale: 0.97 }} className="w-full flex justify-center">
-						<Button variant="destructive" onClick={logout} className="gap-2 w-full">
+						<Button variant="destructive" onClick={handleLogout} className="gap-2 w-full">
 							<LogOutIcon className="size-4" />
 							Logout
 						</Button>

@@ -1,14 +1,29 @@
 import type { Notification } from '@/src/types/notifications';
 import { format } from 'date-fns';
 import { AnimatePresence, motion } from 'motion/react';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import PassNotification from '../components/notifications/PassNotification';
 import StakeNotification from '../components/notifications/StakeNotification';
 import TransferNotification from '../components/notifications/TransferNotification';
 import { useActiveNotifications } from '../lib/query/notifications';
+import { getNotificationPermission, requestNotificationPermission } from '../lib/shared/notifications';
 
 function Notifications() {
 	const { data: notifications } = useActiveNotifications();
+
+	// State to track notification permission
+	const [notificationPermission, setNotificationPermission] = useState<NotificationPermission | null>(null);
+
+	// Check notification permission on component mount
+	useEffect(() => {
+		setNotificationPermission(getNotificationPermission());
+	}, []);
+
+	// Function to request notification permission
+	const handleRequestPermission = async () => {
+		const permission = await requestNotificationPermission();
+		setNotificationPermission(permission);
+	};
 
 	const groupedNotifications = useMemo(() => {
 		if (!notifications) return {};
@@ -65,7 +80,27 @@ function Notifications() {
 	}, [notifications]);
 
 	if (!notifications || notifications.length === 0) {
-		return <div className="flex flex-col gap-2 p-4 w-full justify-center items-center text-muted-foreground">No notifications</div>;
+		return (
+			<div className="flex flex-col gap-4 p-4 w-full justify-center items-center">
+				<div className="text-muted-foreground">No notifications</div>
+
+				{/* Notification permission section */}
+				{notificationPermission && notificationPermission !== 'granted' && (
+					<div className="flex flex-col gap-2 items-center">
+						<p className="text-sm text-muted-foreground">
+							{notificationPermission === 'denied'
+								? 'Notifications are blocked. Please enable them in your browser settings.'
+								: 'Enable notifications to stay updated'}
+						</p>
+						{notificationPermission === 'default' && (
+							<button type="button" onClick={handleRequestPermission} className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium">
+								Enable Notifications
+							</button>
+						)}
+					</div>
+				)}
+			</div>
+		);
 	}
 
 	return (

@@ -66,6 +66,10 @@ function SecuritySection() {
 		setUnlinkEmailDialogOpen(false);
 	};
 
+	if (!user) {
+		return null;
+	}
+
 	return (
 		<>
 			<Drawer open={open} onOpenChange={setOpen}>

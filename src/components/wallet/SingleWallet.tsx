@@ -4,7 +4,7 @@ import { BetLogo, Fox } from '@betfinio/components/icons';
 import { Badge, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, toast } from '@betfinio/components/ui';
 import { type ConnectedWallet, usePrivy, useWallets } from '@privy-io/react-auth';
 import { useSetActiveWallet } from '@privy-io/wagmi';
-import { CopyIcon, DownloadIcon, EllipsisVerticalIcon, PlugZapIcon } from 'lucide-react';
+import { CopyIcon, DownloadIcon, EllipsisVerticalIcon, LogOutIcon, PlugZapIcon } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import type { Address } from 'viem';
@@ -36,7 +36,8 @@ function SingleWallet({ wallet, onClose }: { wallet: Address; onClose: () => voi
 			onClose();
 		}
 	};
-	const handleCopyAddress = () => {
+	const handleCopyAddress = (e: React.MouseEvent) => {
+		e.stopPropagation();
 		navigator.clipboard.writeText(wallet);
 		toast.success('Address copied to clipboard');
 	};
@@ -62,7 +63,7 @@ function SingleWallet({ wallet, onClose }: { wallet: Address; onClose: () => voi
 			</div>
 			<div>
 				<DropdownMenu>
-					<DropdownMenuTrigger className="flex items-center justify-center">
+					<DropdownMenuTrigger className="flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
 						<EllipsisVerticalIcon className="w-4 h-4" />
 					</DropdownMenuTrigger>
 					<DropdownMenuContent>
@@ -73,7 +74,7 @@ function SingleWallet({ wallet, onClose }: { wallet: Address; onClose: () => voi
 						<DropdownMenuItem className="flex items-center gap-2 " onClick={handleCopyAddress}>
 							<CopyIcon className="w-4 h-4" /> Copy address
 						</DropdownMenuItem>
-						<DropdownMenuItem className="flex items-center gap-2 " onClick={handleExportWallet}>
+						<DropdownMenuItem className="flex items-center gap-2 " onClick={handleExportWallet} disabled={connectedWallet?.connectorType !== 'embedded'}>
 							<DownloadIcon className="w-4 h-4" /> Export private key
 						</DropdownMenuItem>
 					</DropdownMenuContent>
