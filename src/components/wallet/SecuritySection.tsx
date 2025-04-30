@@ -11,6 +11,7 @@ import {
 	DrawerHeader,
 	DrawerTitle,
 	DrawerTrigger,
+	toast,
 } from '@betfinio/components/ui';
 import { SiGoogle } from '@icons-pack/react-simple-icons';
 import { usePrivy } from '@privy-io/react-auth';
@@ -56,14 +57,24 @@ function SecuritySection() {
 
 	const handleUnlinkGoogle = async () => {
 		if (!user?.google?.subject) return;
-		await unlinkGoogle(user.google.subject);
-		setUnlinkGoogleDialogOpen(false);
+		try {
+			await unlinkGoogle(user.google.subject);
+			setUnlinkGoogleDialogOpen(false);
+			toast.success('Unlinked Google account');
+		} catch (e) {
+			toast.error('Please link email or add passkey first!');
+		}
 	};
 
 	const handleUnlinkEmail = async () => {
 		if (!user?.email?.address) return;
-		await unlinkEmail(user.email.address);
-		setUnlinkEmailDialogOpen(false);
+		try {
+			await unlinkEmail(user.email.address);
+			setUnlinkEmailDialogOpen(false);
+			toast.success('Unlinked email');
+		} catch (e) {
+			toast.error('Please link Google or add passkey first!');
+		}
 	};
 
 	if (!user) {

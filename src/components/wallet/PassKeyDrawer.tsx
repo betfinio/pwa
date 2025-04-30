@@ -1,5 +1,5 @@
 import { Button, Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from '@betfinio/components/ui';
-import { useLoginWithPasskey, useSignupWithPasskey } from '@privy-io/react-auth';
+import { useActiveWallet, useLoginWithPasskey, useSignupWithPasskey } from '@privy-io/react-auth';
 import { useWallets } from '@privy-io/react-auth';
 import { useCreateWallet } from '@privy-io/react-auth';
 import { FingerprintIcon, LoaderIcon, ScanFaceIcon } from 'lucide-react';
@@ -7,11 +7,18 @@ import { FingerprintIcon, LoaderIcon, ScanFaceIcon } from 'lucide-react';
 function PassKeyDrawer() {
 	const { wallets } = useWallets();
 	const { createWallet } = useCreateWallet();
+	const { setActiveWallet } = useActiveWallet();
 	const { loginWithPasskey, state: loginState } = useLoginWithPasskey();
 	const { signupWithPasskey, state: signupState } = useSignupWithPasskey({
-		onComplete: () => {
+		onComplete: async () => {
 			if (wallets.length === 0) {
-				createWallet();
+				const wallet = await createWallet();
+				const connectedWallet = wallets.find((w) => w.address === wallet.address);
+				if (connectedWallet) {
+					setActiveWallet(connectedWallet);
+				} else {
+					window.location.reload();
+				}
 			}
 		},
 	});

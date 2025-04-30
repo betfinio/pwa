@@ -27,7 +27,6 @@ export async function getLastNotification(): Promise<number> {
 	const db = await initDB();
 	try {
 		const result = await db.get('settings', 'lastNotification');
-		console.log('result', result);
 		return Number(result?.value) ?? 0;
 	} catch (error) {
 		console.error('Failed to get last notification:', error);

@@ -83,28 +83,26 @@ function Notifications() {
 		return (
 			<div className="flex flex-col gap-4 p-4 w-full justify-center items-center">
 				<div className="text-muted-foreground">No notifications</div>
-
-				{/* Notification permission section */}
-				{notificationPermission && notificationPermission !== 'granted' && (
-					<div className="flex flex-col gap-2 items-center">
-						<p className="text-sm text-muted-foreground">
-							{notificationPermission === 'denied'
-								? 'Notifications are blocked. Please enable them in your browser settings.'
-								: 'Enable notifications to stay updated'}
-						</p>
-						{notificationPermission === 'default' && (
-							<button type="button" onClick={handleRequestPermission} className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium">
-								Enable Notifications
-							</button>
-						)}
-					</div>
-				)}
 			</div>
 		);
 	}
 
 	return (
 		<div className="flex flex-col gap-2 p-2">
+			{notificationPermission && notificationPermission !== 'granted' && (
+				<div className="text-sm text-muted-foreground p-2 border w-full border-destructive rounded-lg">
+					<div className="flex flex-row justify-between gap-2 items-center">
+						{notificationPermission === 'denied'
+							? 'Notifications are blocked. Please enable them in your browser settings.'
+							: 'Enable notifications to stay updated'}
+						{notificationPermission === 'default' && (
+							<button type="button" onClick={handleRequestPermission} className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium">
+								Enable Notifications
+							</button>
+						)}
+					</div>
+				</div>
+			)}
 			<AnimatePresence mode="popLayout">
 				{Object.entries(groupedNotifications).map(([date, dayNotifications]) => (
 					<motion.div

@@ -48,20 +48,3 @@ export async function requestNotificationPermission(): Promise<NotificationPermi
 		return null;
 	}
 }
-
-/**
- * Show a notification if permission is granted
- * @param title The notification title
- * @param options Notification options
- * @returns The notification object if successful, null otherwise
- */
-export function showNotification(title: string, options?: NotificationOptions): Notification | null {
-	if (!isNotificationsEnabled()) return null;
-
-	try {
-		return new Notification(title, options);
-	} catch (error) {
-		console.error('Error showing notification:', error);
-		return null;
-	}
-}

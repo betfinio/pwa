@@ -11,7 +11,6 @@ export const fetchActiveNotifications = async (address: Address, from: number): 
 		addresses: [address],
 		lastUpdated: 0,
 	});
-	console.log(result);
 	if (result.data) {
 		return result.data.notifications.map((notification) => ({
 			id: notification.id,

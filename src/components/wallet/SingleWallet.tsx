@@ -25,7 +25,8 @@ function SingleWallet({ wallet, onClose }: { wallet: Address; onClose: () => voi
 		}
 	}, [wallets, wallet]);
 
-	const handleExportWallet = async () => {
+	const handleExportWallet = async (e: React.MouseEvent) => {
+		e.stopPropagation();
 		await exportWallet({ address: wallet });
 	};
 	const handleConnectWallet = async (e: React.MouseEvent) => {

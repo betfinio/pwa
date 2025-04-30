@@ -1,7 +1,8 @@
 import { BetfinLogo, Fox } from '@betfinio/components/icons';
 import { Button } from '@betfinio/components/ui';
-import { useLogin, usePrivy, useWallets } from '@privy-io/react-auth';
+import { useActiveWallet, useLogin, usePrivy, useWallets } from '@privy-io/react-auth';
 import { IdCardIcon, LoaderIcon } from 'lucide-react';
+import { useEffect } from 'react';
 import { useAccount } from 'wagmi';
 import ActionsSection from '../components/wallet/ActionsSection';
 import BalanceSection from '../components/wallet/BalanceSection';
@@ -13,10 +14,19 @@ import SecuritySection from '../components/wallet/SecuritySection';
 
 function WalletPage() {
 	const { wallets, ready: walletsReady } = useWallets();
+	const { setActiveWallet } = useActiveWallet();
 	const { ready, authenticated, connectWallet } = usePrivy();
 	const { address } = useAccount();
 
 	const { login } = useLogin();
+
+	useEffect(() => {
+		if (walletsReady && !address && ready) {
+			if (wallets.length > 0) {
+				setActiveWallet(wallets[0]);
+			}
+		}
+	}, [address, wallets, walletsReady, ready]);
 
 	if (!ready || !walletsReady) {
 		return (
@@ -65,10 +75,10 @@ function WalletPage() {
 
 	return (
 		<div className="flex flex-col gap-4 p-4">
-			<ProfileLink />
-			<BalanceSection />
-			<ActionsSection />
-			<SecuritySection />
+			{address && <ProfileLink />}
+			{address && <BalanceSection />}
+			{address && <ActionsSection />}
+			{address && <SecuritySection />}
 			<AuthSection />
 		</div>
 	);

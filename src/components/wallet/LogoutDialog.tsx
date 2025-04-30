@@ -3,7 +3,7 @@ import { DialogDescription, DialogFooter } from '@betfinio/components/ui';
 import { DialogContent, DialogHeader, DialogTitle } from '@betfinio/components/ui';
 import { DialogTrigger } from '@betfinio/components/ui';
 import { Dialog } from '@betfinio/components/ui';
-import { useLogout } from '@privy-io/react-auth';
+import { usePrivy } from '@privy-io/react-auth';
 import { disconnect } from '@wagmi/core';
 import { LogOutIcon } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -11,10 +11,10 @@ import { useConfig } from 'wagmi';
 
 function LogoutDialog() {
 	const config = useConfig();
-	const { logout } = useLogout();
+	const { logout } = usePrivy();
 	const handleLogout = () => {
-		logout();
 		disconnect(config);
+		logout();
 	};
 	return (
 		<Dialog>
