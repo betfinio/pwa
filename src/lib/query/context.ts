@@ -1,6 +1,6 @@
 import logger from '@/src/config/logger';
 import { mfQueryClient } from '@/src/config/query';
-import type { ContextApiModule, ContextConfigModule, ContextQueryModule, ContextUtilsModule, MintResult, RemoteModule } from '@/src/types';
+import type { ContextApiModule, ContextConfigModule, ContextGqlModule, ContextUtilsModule, MintResult, RemoteModule, TreeMember } from '@/src/types';
 import { toast } from '@betfinio/components/ui';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useCallback } from 'react';
@@ -28,6 +28,75 @@ export const useIsMember = (address: Address) => {
 	return useQuery<boolean | null, Error>(
 		{
 			queryKey: ['isMember', address, api],
+			queryFn: () => func(address),
+		},
+		mfQueryClient,
+	);
+};
+
+export const useTreeMember = (address: Address) => {
+	const gql = useLoadRemoteModule<ContextGqlModule>(mfQueryClient, MODULE, 'lib/gql');
+
+	const func = useCallback(
+		async (addr: Address) => {
+			if (gql) {
+				return await gql.fetchTreeMember(addr);
+			}
+			return null;
+		},
+		[gql],
+	);
+
+	return useQuery<TreeMember | null, Error>(
+		{
+			queryKey: ['treeMember', address, gql],
+			queryFn: () => func(address),
+		},
+		mfQueryClient,
+	);
+};
+
+export const useRegistrationDate = (address: Address) => {
+	const gql = useLoadRemoteModule<ContextGqlModule>(mfQueryClient, MODULE, 'lib/gql');
+
+	const func = useCallback(
+		async (addr: Address) => {
+			if (gql) {
+				return await gql.fetchRegistrationDate(addr);
+			}
+			return Date.now();
+		},
+		[gql],
+	);
+
+	return useQuery<number | null, Error>(
+		{
+			queryKey: ['registrationDate', address, gql],
+			queryFn: () => func(address),
+		},
+		mfQueryClient,
+	);
+};
+
+export const useUsername = (address: Address, me: Address) => {
+	const api = useLoadRemoteModule<ContextApiModule>(mfQueryClient, MODULE, 'lib/api');
+
+	const func = useCallback(
+		async (addr: Address) => {
+			if (api) {
+				console.log('fetching username', addr, me);
+				const username = await api.fetchUsername(addr, null, me);
+				console.log(username);
+				return username;
+			}
+			return null;
+		},
+		[api],
+	);
+
+	return useQuery<string | null, Error>(
+		{
+			queryKey: ['username', address, me, api],
 			queryFn: () => func(address),
 		},
 		mfQueryClient,

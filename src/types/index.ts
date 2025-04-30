@@ -54,6 +54,7 @@ export interface AppSidebarModule {
 export interface ContextConfigModule {
 	wagmiConfig: Config;
 	queryClient: QueryClient;
+	supabaseClient: any;
 }
 
 export type InviteCode = Partial<{
@@ -69,17 +70,61 @@ export type InviteRef = Partial<{
 	side: 'L' | 'R';
 }>;
 
+export interface TreeMember {
+	member: Address;
+	parent: Address;
+	inviter: Address;
+	side: string;
+	left: Address | null;
+	right: Address | null;
+	isMatching: boolean;
+	isInviting: boolean;
+
+	volume: bigint;
+	volumeLeft: bigint;
+	volumeRight: bigint;
+	volumeDirect: bigint;
+	volumeLinear: bigint;
+
+	bets: bigint;
+	betsLeft: bigint;
+	betsRight: bigint;
+
+	matchedLeft: bigint;
+	matchedRight: bigint;
+	countLeft: bigint;
+	countRight: bigint;
+	countDirect: bigint;
+	countLinear: bigint;
+
+	betsDirect: bigint;
+	betsLinear: bigint;
+
+	stakingDirect: bigint;
+	stakingLinear: bigint;
+
+	linearLevel: number;
+	binaryLevel: number;
+	totalMatched: bigint;
+}
+
 export type MintResult = { error: string } | { address: Address; inviter: Address; parent: Address };
 
 export interface ContextApiModule {
 	fetchBalance: (address: Address, config: Config, block?: bigint) => Promise<bigint>;
 	fetchAllowance: (address: Address, config: Config) => Promise<bigint>;
+	fetchUsername: (member: Address, supabase?: any, user?: Address) => Promise<string>;
 	isMember: (address: Address, config: Config) => Promise<boolean>;
 	increaseAllowance: (config: Config) => Promise<WriteContractReturnType>;
 	mint: (address: Address, inviter: Address, parent: Address, config: Config) => Promise<WriteContractReturnType>;
 }
+export interface ContextGqlModule {
+	fetchRegistrationDate: (address: Address) => Promise<number>;
+	fetchTreeMember: (address: Address) => Promise<TreeMember>;
+}
 export interface ContextGlobalsModule {
 	TOKEN_ADDRESS: Address;
+	ETHSCAN: string;
 }
 export interface ContextUtilsModule {
 	validateRef: (search: Record<string, unknown>) => Record<string, unknown>;

@@ -1,80 +1,39 @@
 import { ZeroAddress, truncateEthAddress } from '@betfinio/abi';
+import { BetValue } from '@betfinio/components';
 import { Blackjack, Staking } from '@betfinio/components/icons';
-import { Button, toast } from '@betfinio/components/ui';
+import { Button, Separator, toast } from '@betfinio/components/ui';
 import { useRouter } from '@tanstack/react-router';
 import { ChevronLeftIcon, Copy, ExternalLink, MedalIcon, PenLine, UsersRoundIcon } from 'lucide-react';
+import { DateTime } from 'luxon';
 import { useAccount } from 'wagmi';
-interface ProfileStats {
-	username: string;
-	wallet: string;
-	registrationDate: string;
-	inviter: string;
-	network: {
-		direct: number;
-		total: number;
-	};
-	volume: {
-		staking: number;
-		betting: number;
-	};
-	networkVolume: {
-		direct: {
-			staking: number;
-			bets: number;
-		};
-		binary: {
-			staking: number;
-			bets: number;
-		};
-		matchingVolume: number;
-	};
-}
+import { mfQueryClient } from '../config/query';
+import { useRegistrationDate, useTreeMember, useUsername } from '../lib/query/context';
+import { useLoadRemoteModule } from '../lib/query/mf';
+import type { ContextGlobalsModule } from '../types';
 
 function Profile() {
-	const { address = ZeroAddress } = useAccount();
 	const router = useRouter();
-
-	const copyToClipboard = (text: string) => {
-		navigator.clipboard.writeText(text);
-		toast.success('Copied to clipboard');
-	};
+	const { address = ZeroAddress } = useAccount();
+	const { data: treeMember } = useTreeMember(address);
+	const { data: username } = useUsername(address, address);
+	const { data: registrationDate = Date.now() } = useRegistrationDate(address);
+	const globals = useLoadRemoteModule<ContextGlobalsModule>(mfQueryClient, 'betfinio_context', 'globals');
 
 	// This would normally come from your API/context
-	const profileData: ProfileStats = {
-		username: 'BF.tom',
-		wallet: '0x26E...8adbDc5',
-		registrationDate: '2 Dec 2025 21:15',
-		inviter: '0x26E2...F3FfD',
-		network: {
-			direct: 5,
-			total: 112,
-		},
-		volume: {
-			staking: 698.7,
-			betting: 115,
-		},
-		networkVolume: {
-			direct: {
-				staking: 100000.0,
-				bets: 100000.0,
-			},
-			binary: {
-				staking: 100000.0,
-				bets: 100000.0,
-			},
-			matchingVolume: 320000.0,
-		},
-	};
-
 	const handleBack = () => {
 		router.history.back();
+	};
+
+	const handleCopyAddress = () => {
+		navigator.clipboard.writeText(address);
+		toast.success('Address copied to clipboard');
 	};
 
 	return (
 		<div className="p-4 flex flex-col gap-4">
 			{/* Header */}
 			<div className="flex items-center gap-4 justify-center relative">
-				<div onClick={handleBack} className="p-2 rounded-lg bg-gray-800/50 absolute left-0 top-0 cursor-pointer">
+				<div onClick={handleBack} className="p-2 rounded-lg bg-background-lighter absolute left-0 top-0 cursor-pointer">
 					<ChevronLeftIcon className="size-4" />
 				</div>
 				<h1 className="text-xl font-semibold">My Profile</h1>
@@ -86,13 +45,9 @@ function Profile() {
 					<img src="/icon-512.png" alt="Profile" className="w-16 h-16 rounded-full" />
 					<div className="flex-1">
 						<div className="text-muted-foreground text-sm">Username</div>
-						<div className="text-success text-lg font-medium">{profileData.username}</div>
+						<div className="text-success text-lg font-medium">{username}</div>
 					</div>
-					<Button variant="secondary" className="gap-2 px-4 py-2" size="freeSize">
-						Edit <PenLine className="size-4" />
-					</Button>
 				</div>
-
 				{/* Wallet & Registration */}
 				<div className="flex gap-4 flex-col">
 					<div className="flex items-center gap-2 w-full justify-between">
@@ -103,17 +58,19 @@ function Profile() {
 							</div>
 						</div>
 						<div>
-							<Button onClick={() => copyToClipboard(profileData.wallet)} variant="ghost" size="icon">
+							<Button onClick={handleCopyAddress} variant="ghost" size="icon">
 								<Copy size={16} className="text-muted-foreground" />
 							</Button>
-							<Button variant="ghost" size="icon">
-								<ExternalLink size={16} className="text-muted-foreground" />
-							</Button>
+							<a href={`${globals?.ETHSCAN}/address/${address}`} target="_blank" rel="noopener noreferrer">
+								<Button variant="ghost" size="icon">
+									<ExternalLink size={16} className="text-muted-foreground" />
+								</Button>
+							</a>
 						</div>
 					</div>
 					<div>
 						<div className="text-muted-foreground text-sm">Registration date</div>
-						<div>{profileData.registrationDate}</div>
+						<div>{DateTime.fromMillis(registrationDate ?? 0).toFormat('DD, T')}</div>
 					</div>
 				</div>
 			</div>
@@ -125,11 +82,13 @@ function Profile() {
 						<div className="rounded-full">
 							<UsersRoundIcon className="size-6 text-primary" />
 						</div>
-						<ExternalLink size={16} className="text-muted-foreground" />
+						<a href={`${globals?.ETHSCAN}/address/${address}`} target="_blank" rel="noopener noreferrer">
+							<ExternalLink className="text-muted-foreground size-4" />
+						</a>
 					</div>
 					<div className="">
 						<div className="text-sm text-muted-foreground">Inviter</div>
-						<div className="font-medium">{profileData.inviter}</div>
+						<div className="font-medium">{truncateEthAddress(treeMember?.inviter ?? ZeroAddress)}</div>
 					</div>
 				</div>
 				<div className="p-4 rounded-2xl bg-background-lighter border border-border flex flex-col gap-4">
@@ -139,7 +98,7 @@ function Profile() {
 					<div className="">
 						<div className="text-sm text-muted-foreground">Network</div>
 						<div className="font-medium">
-							{profileData.network.direct} direct / {profileData.network.total} total
+							{treeMember?.countDirect} direct / {treeMember?.countLinear} total
 						</div>
 					</div>
 				</div>
@@ -153,7 +112,7 @@ function Profile() {
 					</div>
 					<div className="">
 						<div className="text-sm text-muted-foreground">Staking Volume</div>
-						<div className="font-medium">{profileData.volume.staking} BET</div>
+						<BetValue value={treeMember?.stakingLinear ?? 0n} withIcon />
 					</div>
 				</div>
 				<div className="p-4 rounded-2xl bg-background-lighter border border-border flex flex-col gap-4">
@@ -162,7 +121,7 @@ function Profile() {
 					</div>
 					<div className="">
 						<div className="text-sm text-muted-foreground">Betting Volume</div>
-						<div className="font-medium">{profileData.volume.betting} BET</div>
+						<BetValue value={treeMember?.betsLinear ?? 0n} withIcon />
 					</div>
 				</div>
 			</div>
@@ -176,13 +135,13 @@ function Profile() {
 						<div className="space-y-2">
 							<div>
 								<div className="flex justify-between">
-									<span>{profileData.networkVolume.direct.staking.toFixed(2)} BET</span>
+									<BetValue value={treeMember?.volumeDirect ?? 0n} withIcon />
 								</div>
 								<div className="text-sm text-muted-foreground">total staking</div>
 							</div>
 							<div>
 								<div className="flex justify-between">
-									<span>{profileData.networkVolume.direct.bets.toFixed(2)} BET</span>
+									<BetValue value={treeMember?.betsDirect ?? 0n} withIcon />
 								</div>
 								<div className="text-sm text-muted-foreground">total bets</div>
 							</div>
@@ -193,21 +152,25 @@ function Profile() {
 						<div className="space-y-2">
 							<div>
 								<div className="flex justify-between">
-									<span>{profileData.networkVolume.binary.staking.toFixed(2)} BET</span>
+									<BetValue value={treeMember?.volumeLinear ?? 0n} withIcon />
 								</div>
 								<div className="text-sm text-muted-foreground">total staking</div>
 							</div>
 							<div>
 								<div className="flex justify-between">
-									<span>{profileData.networkVolume.binary.bets.toFixed(2)} BET</span>
+									<BetValue value={treeMember?.betsLinear ?? 0n} withIcon />
 								</div>
 								<div className="text-sm text-muted-foreground">total bets</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div className="mt-4 pt-4 border-t border-gray-800">
-					<div className="text-center text-yellow-500">{profileData.networkVolume.matchingVolume.toFixed(2)} BET matching volume</div>
+				<Separator className="my-4" />
+				<div className="">
+					<div className="text-center flex flex-row gap-2 items-center justify-center">
+						<BetValue value={treeMember?.totalMatched ?? 0n} withIcon />
+						Total matched
+					</div>
 				</div>
 			</div>
 		</div>

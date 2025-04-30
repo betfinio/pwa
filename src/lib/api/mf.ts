@@ -34,5 +34,6 @@ export async function loadRemoteModule<T>(module: RemoteModule, path: string) {
 	if (!config) {
 		throw new Error(`Failed to load ${module} config - ${path}`);
 	}
+	console.log('loaded remote module', module, path, config);
 	return config as T;
 }
