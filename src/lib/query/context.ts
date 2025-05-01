@@ -84,9 +84,7 @@ export const useUsername = (address: Address, me: Address) => {
 	const func = useCallback(
 		async (addr: Address) => {
 			if (api) {
-				console.log('fetching username', addr, me);
 				const username = await api.fetchUsername(addr, null, me);
-				console.log(username);
 				return username;
 			}
 			return null;

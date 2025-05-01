@@ -68,7 +68,6 @@ const NavItem: FC<NavItemProps> = ({ icon, label, href, children, external = fal
 
 	const labelTranslated = t(label as string, { defaultValue: label });
 	const handleOnClick = () => {
-		console.log('clicked');
 		setOpenMobile(false);
 		if (onClick) {
 			onClick();

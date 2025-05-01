@@ -3,7 +3,7 @@ import { BetValue } from '@betfinio/components';
 import { Blackjack, Staking } from '@betfinio/components/icons';
 import { Button, Separator, toast } from '@betfinio/components/ui';
 import { useRouter } from '@tanstack/react-router';
-import { ChevronLeftIcon, Copy, ExternalLink, MedalIcon, PenLine, UsersRoundIcon } from 'lucide-react';
+import { ChevronLeftIcon, Copy, ExternalLink, MedalIcon, UsersRoundIcon } from 'lucide-react';
 import { DateTime } from 'luxon';
 import { useAccount } from 'wagmi';
 import { mfQueryClient } from '../config/query';

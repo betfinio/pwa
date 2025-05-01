@@ -121,11 +121,10 @@ if ('serviceWorker' in navigator) {
 
 window.addEventListener('beforeinstallprompt', (e) => {
 	e.preventDefault();
-	console.log('beforeinstallprompt', e);
 	(window as any).deferredPrompt = e;
 });
 
-document.addEventListener('DOMContentLoaded', (event) => {
+document.addEventListener('DOMContentLoaded', () => {
 	// we can move only if we are not in a browser's tab
 	const isBrowser = matchMedia('(display-mode: browser)').matches;
 	if (!isBrowser) {
