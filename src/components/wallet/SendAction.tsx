@@ -3,7 +3,7 @@ import { useSendNative } from '@/src/lib/query/wallet';
 import { useSendERC20 } from '@/src/lib/query/wallet';
 import { ZeroAddress } from '@betfinio/abi';
 import { BetLogo, Polygon } from '@betfinio/components/icons';
-import { Badge, DrawerDescription, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@betfinio/components/ui';
+import { Badge, DrawerDescription, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, toast } from '@betfinio/components/ui';
 import { DrawerTitle } from '@betfinio/components/ui';
 import { DrawerTrigger } from '@betfinio/components/ui';
 import { Drawer } from '@betfinio/components/ui';
@@ -132,9 +132,10 @@ function SendAction() {
 					ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 					const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 					const qrCode = jsQR(imageData.data, imageData.width, imageData.height);
-
-					if (qrCode) {
-						setTo(qrCode.data as Address); // Display QR code data
+					const regex = /(0x[0-9a-zA-Z]{40})/;
+					const address = qrCode?.data.match(regex)?.[1];
+					if (address && isAddress(address)) {
+						setTo(address);
 						setScanQR(false);
 					}
 				}
