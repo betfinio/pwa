@@ -26,6 +26,7 @@
 	html,
 	body {
 		font-family: "QuickSand", sans-serif;
+		--privy-color-warn-light: #0088cc;
 	}
 }
 

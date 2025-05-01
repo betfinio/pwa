@@ -1,4 +1,4 @@
-import { UNISWAP_URL } from '@/src/globals';
+import { TOKEN_ADDRESS, UNISWAP_URL } from '@/src/globals';
 import { cn } from '@betfinio/components';
 import { Button, DrawerDescription } from '@betfinio/components/ui';
 import { DrawerTitle } from '@betfinio/components/ui';
@@ -17,7 +17,7 @@ function BuyAction() {
 	const { address, chain } = useAccount();
 	const handleFund = useCallback(() => {
 		if (address) {
-			fundWallet(address, { chain: { id: chain?.id ?? 137 } });
+			fundWallet(address, { chain: { id: chain?.id ?? 137 }, asset: { erc20: TOKEN_ADDRESS } });
 		}
 	}, [address, fundWallet]);
 	return (
