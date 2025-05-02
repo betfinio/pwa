@@ -36,7 +36,8 @@
 				"useFocusableInteractive": "off"
 			},
 			"correctness": {
-				"useExhaustiveDependencies": "off"
+				"useExhaustiveDependencies": "off",
+				"noUnknownMediaFeatureName": "off"
 			},
 			"recommended": true,
 			"security": {

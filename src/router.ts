@@ -1,5 +1,6 @@
 import { createRootRoute, createRoute, createRouter, lazyRouteComponent, redirect } from '@tanstack/react-router';
 
+import Balance from './routes/balance';
 import Notifications from './routes/notifications';
 import Profile from './routes/profile';
 import Root from './routes/root';
@@ -15,6 +16,11 @@ const indexHTMLRoute = createRoute({
 	beforeLoad: async () => {
 		throw redirect({ to: '/wallet' });
 	},
+});
+const balanceRoute = createRoute({
+	getParentRoute: () => rootRoute,
+	path: '/balance',
+	component: Balance,
 });
 
 const profileRoute = createRoute({
@@ -280,6 +286,7 @@ rootRoute.addChildren([
 	createAcademyRoute,
 	appRoute,
 	notificationsRoute,
+	balanceRoute,
 ]);
 const router = createRouter({
 	routeTree: rootRoute,
