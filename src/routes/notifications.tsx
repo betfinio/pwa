@@ -2,6 +2,7 @@ import type { Notification } from '@/src/types/notifications';
 import { format } from 'date-fns';
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useMemo, useState } from 'react';
+import NewBetNotification from '../components/notifications/NewBetNotification';
 import PassNotification from '../components/notifications/PassNotification';
 import StakeNotification from '../components/notifications/StakeNotification';
 import TransferNotification from '../components/notifications/TransferNotification';
@@ -137,8 +138,8 @@ function Notifications() {
 }
 
 function SingleNotification({ notification }: { notification: Notification }) {
-	if (notification.type === 'TRANSFER') {
-		return <TransferNotification notification={notification} />;
+	if (notification.type === 'NEW_BET') {
+		return <NewBetNotification notification={notification} />;
 	}
 	if (notification.type === 'PASS') {
 		return <PassNotification />;
@@ -148,6 +149,9 @@ function SingleNotification({ notification }: { notification: Notification }) {
 	}
 	if (notification.type === 'DYNAMIC_STAKE') {
 		return <StakeNotification notification={notification} variant="dynamic" />;
+	}
+	if (notification.type === 'TRANSFER') {
+		return <TransferNotification notification={notification} />;
 	}
 	return null;
 }

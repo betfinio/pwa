@@ -1,11 +1,4 @@
-import { TOKEN_ADDRESS, UNISWAP_URL } from '@/src/globals';
-import { cn } from '@betfinio/components';
-import { Button, DrawerDescription } from '@betfinio/components/ui';
-import { DrawerTitle } from '@betfinio/components/ui';
-import { DrawerTrigger } from '@betfinio/components/ui';
-import { Drawer } from '@betfinio/components/ui';
-import { DrawerContent } from '@betfinio/components/ui';
-import { DrawerHeader } from '@betfinio/components/ui';
+import { TOKEN_ADDRESS } from '@/src/globals';
 import { useFundWallet } from '@privy-io/react-auth';
 import { WalletIcon } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -14,10 +7,10 @@ import { useAccount } from 'wagmi';
 
 function BuyAction() {
 	const { fundWallet } = useFundWallet();
-	const { address, chain } = useAccount();
+	const { address } = useAccount();
 	const handleFund = useCallback(() => {
 		if (address) {
-			fundWallet(address, { chain: { id: chain?.id ?? 137 }, asset: { erc20: TOKEN_ADDRESS } });
+			fundWallet(address, { chain: { id: 137 }, asset: { erc20: TOKEN_ADDRESS } });
 		}
 	}, [address, fundWallet]);
 	return (

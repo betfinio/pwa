@@ -36,7 +36,7 @@ export interface I18nModule {
 
 export interface ContextTranslationsModule {
 	sharedLang: {
-		[key: string]: any;
+		[key: string]: string | number;
 	};
 }
 
@@ -54,7 +54,7 @@ export interface AppSidebarModule {
 export interface ContextConfigModule {
 	wagmiConfig: Config;
 	queryClient: QueryClient;
-	supabaseClient: any;
+	supabaseClient: unknown;
 }
 
 export type InviteCode = Partial<{
@@ -113,7 +113,7 @@ export type MintResult = { error: string } | { address: Address; inviter: Addres
 export interface ContextApiModule {
 	fetchBalance: (address: Address, config: Config, block?: bigint) => Promise<bigint>;
 	fetchAllowance: (address: Address, config: Config) => Promise<bigint>;
-	fetchUsername: (member: Address, supabase?: any, user?: Address) => Promise<string>;
+	fetchUsername: (member: Address, supabase?: unknown, user?: Address) => Promise<string>;
 	isMember: (address: Address, config: Config) => Promise<boolean>;
 	increaseAllowance: (config: Config) => Promise<WriteContractReturnType>;
 	mint: (address: Address, inviter: Address, parent: Address, config: Config) => Promise<WriteContractReturnType>;
@@ -124,6 +124,8 @@ export interface ContextGqlModule {
 }
 export interface ContextGlobalsModule {
 	TOKEN_ADDRESS: Address;
+	PREDICT_ADDRESS: Address;
+	ROULETTE_ADDRESS: Address;
 	ETHSCAN: string;
 }
 export interface ContextUtilsModule {

@@ -22,7 +22,7 @@ export const useIsMember = (address: Address) => {
 			}
 			return null;
 		},
-		[api],
+		[api, config],
 	);
 
 	return useQuery<boolean | null, Error>(
@@ -89,7 +89,7 @@ export const useUsername = (address: Address, me: Address) => {
 			}
 			return null;
 		},
-		[api],
+		[api, me],
 	);
 
 	return useQuery<string | null, Error>(
@@ -112,7 +112,7 @@ export const useBalance = (address: Address) => {
 			}
 			return 0n;
 		},
-		[api],
+		[api, config],
 	);
 
 	return useQuery<bigint, Error>(
@@ -135,7 +135,7 @@ export const useAllowance = (address: Address) => {
 			}
 			return 0n;
 		},
-		[api],
+		[api, config],
 	);
 
 	return useQuery<bigint, Error>(
@@ -181,7 +181,7 @@ export const useIncreaseAllowance = () => {
 };
 
 export const useMintPass = () => {
-	return useMutation<any, Error, { address: Address; ref: string }>({
+	return useMutation<MintResult, Error, { address: Address; ref: string }>({
 		mutationFn: async ({ address, ref }) => {
 			logger.start('fetching api');
 			// get utils from context

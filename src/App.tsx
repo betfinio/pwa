@@ -25,7 +25,7 @@ function App() {
 				instance.addResourceBundle(key, 'shared', sharedTranslations.sharedLang[key]);
 			}
 		}
-	}, [sharedTranslations, instance]);
+	}, [sharedTranslations]);
 
 	// Return null while modules are loading
 	if (!contextModule || !sharedTranslations) {

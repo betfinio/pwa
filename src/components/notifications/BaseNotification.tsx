@@ -15,7 +15,7 @@ function BaseNotification({ icon, title, description, value }: BaseNotificationP
 					<p className="text-xs text-gray-500">{description}</p>
 				</div>
 			</div>
-			<div className="flex items-center gap-2 mr-2">{value}</div>
+			<div className="flex items-center gap-2 mr-2 text-sm">{value}</div>
 		</div>
 	);
 }

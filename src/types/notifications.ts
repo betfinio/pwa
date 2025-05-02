@@ -16,4 +16,5 @@ export type NotificationType =
 	| 'DYNAMIC_STAKE'
 	| 'CONSERVATIVE_CLAIMED'
 	| 'DYNAMIC_CLAIMED'
+	| 'NEW_BET'
 	| 'CONSERVATIVE_CLAIMABLE';

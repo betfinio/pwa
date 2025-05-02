@@ -26,7 +26,7 @@ function WalletPage() {
 				setActiveWallet(wallets[0]);
 			}
 		}
-	}, [address, wallets, walletsReady, ready]);
+	}, [address, wallets, walletsReady, ready, setActiveWallet]);
 
 	if (!ready || !walletsReady) {
 		return (
@@ -45,14 +45,14 @@ function WalletPage() {
 
 	if (!authenticated && !address) {
 		return (
-			<div className="flex flex-col gap-4 justify-between w-full h-full items-center p-4">
-				<div className="relative h-full flex flex-col justify-start py-20 items-center w-full">
+			<div className="flex flex-col gap-4 justify-between w-full h-full items-center p-4 relative">
+				<div className=" h-full flex flex-col justify-start py-20 items-center w-full">
 					<BetfinLogo className="size-40 z-1" />
-					<div className="bg-violet-900/50 size-[500px] rounded-full blur-3xl z-0 absolute" />
-					<div className="bg-violet-900 size-[300px] rounded-full blur-3xl z-0 absolute" />
+					<div className="bg-violet-900/50 size-[500px] rounded-full blur-3xl top-0 z-0 absolute" />
+					<div className="bg-violet-900 size-[300px] rounded-full blur-3xl top-0 z-0 absolute" />
 				</div>
 				<PassKeyDrawer />
-				<div className="flex flex-row w-full gap-2">
+				<div className="flex flex-row w-full gap-2 z-10">
 					<Button onClick={handleLogin} variant={'outline'} className="w-full gap-2">
 						<Fox className="w-4 " />
 						Connect wallet
