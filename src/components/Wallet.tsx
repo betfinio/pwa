@@ -1,12 +1,25 @@
 import { ZeroAddress, truncateEthAddress } from '@betfinio/abi';
+import { Button, Dialog, DialogContent, DialogTrigger } from '@betfinio/components';
 import { Link } from '@tanstack/react-router';
 import { UserCircleIcon } from 'lucide-react';
 import { useAccount } from 'wagmi';
+import WalletPage from '../routes/wallet';
 
 function Wallet() {
 	const { address = ZeroAddress } = useAccount();
 
-	if (address === ZeroAddress) return null;
+	if (address === ZeroAddress) {
+		return (
+			<Dialog>
+				<DialogTrigger asChild>
+					<Button>Log in or sign up</Button>
+				</DialogTrigger>
+				<DialogContent>
+					<WalletPage />
+				</DialogContent>
+			</Dialog>
+		);
+	}
 
 	return (
 		<Link to="/wallet">

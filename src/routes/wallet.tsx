@@ -30,7 +30,7 @@ function WalletPage() {
 
 	if (!ready || !walletsReady) {
 		return (
-			<div className="flex justify-center w-screen flex-row h-screen items-center">
+			<div className="flex justify-center w-full flex-row h-full items-center">
 				<LoaderIcon className="w-8 h-8 animate-spin" />
 			</div>
 		);
@@ -45,14 +45,14 @@ function WalletPage() {
 
 	if (!authenticated && !address) {
 		return (
-			<div className="flex flex-col gap-4 justify-between w-full h-full items-center p-4 relative">
+			<div className="flex flex-col gap-4 justify-between w-full h-full items-center p-4 relative max-w-md mx-auto">
 				<div className=" h-full flex flex-col justify-start py-20 items-center w-full">
 					<BetfinLogo className="size-40 z-1" />
 					<div className="bg-violet-900/50 size-[500px] rounded-full blur-3xl top-0 z-0 absolute" />
 					<div className="bg-violet-900 size-[300px] rounded-full blur-3xl top-0 z-0 absolute" />
 				</div>
 				<PassKeyDrawer />
-				<div className="flex flex-row w-full gap-2 z-10">
+				<div className="flex flex-row w-full gap-2 relative z-10">
 					<Button onClick={handleLogin} variant={'outline'} className="w-full gap-2">
 						<Fox className="w-4 " />
 						Connect wallet
@@ -65,6 +65,7 @@ function WalletPage() {
 			</div>
 		);
 	}
+
 	if (wallets.length === 0) {
 		return (
 			<div className="flex flex-col gap-4 w-full h-full items-center p-4 justify-between">
@@ -74,7 +75,7 @@ function WalletPage() {
 	}
 
 	return (
-		<div className="flex flex-col gap-4 p-4">
+		<div className="flex flex-col gap-4 p-4 md:w-[500px] mx-auto">
 			{address && <ProfileLink />}
 			{address && <BalanceSection />}
 			{address && <ActionsSection />}

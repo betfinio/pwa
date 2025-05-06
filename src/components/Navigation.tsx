@@ -1,15 +1,20 @@
+import { useMediaQuery } from '@betfinio/components/hooks';
 import { useSidebar } from '@betfinio/components/ui';
 import { Link, useLocation } from '@tanstack/react-router';
 import { BellIcon, Gamepad2Icon, Layers3Icon, MenuIcon, WalletIcon } from 'lucide-react';
 
 function Navigation() {
 	const { toggleSidebar } = useSidebar();
+	const { isMobile, isTablet } = useMediaQuery();
+	const isVisible = isMobile || isTablet;
 
 	const { pathname } = useLocation();
 
 	const isActive = (href: string) => {
 		return pathname.includes(href);
 	};
+
+	if (!isVisible) return null;
 
 	return (
 		<nav className="grid grid-cols-5 fixed w-screen bottom-0 left-0 border-t border-border p-2 pt-3 bg-background h-16 z-10">

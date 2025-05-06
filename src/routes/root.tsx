@@ -18,8 +18,6 @@ import { useContextManifest } from '../lib/query/mf';
 import { useStoredAddress } from '../lib/query/wallet';
 
 function Root() {
-	const { isMobile, isTablet } = useMediaQuery();
-	const isVisible = isMobile || isTablet;
 	const { wallets, ready } = useWallets();
 	const { address, status } = useAccount();
 	const { data: storedAddress, updateAddress } = useStoredAddress();
@@ -95,14 +93,6 @@ function Root() {
 		});
 	}, [hasController]);
 
-	if (!isVisible) {
-		return (
-			<div className="flex flex-col w-screen h-screen justify-center items-center">
-				<h1 className="text-2xl font-semibold">PWA is available only on mobile devices</h1>
-			</div>
-		);
-	}
-	console.log('initialized', initialized);
 	if (!initialized) return <Loading />;
 
 	return (
